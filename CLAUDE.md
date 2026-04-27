@@ -70,9 +70,44 @@ The TOC also has a "Last updated" date at the top — bump it when you make TOC 
 
 ---
 
+## Rule 6: Use and maintain `QUICK_COMMANDS.md`.
+
+`QUICK_COMMANDS.md` is a cheatsheet of every command, prompt, and shortcut that's been useful in this project. **Read it at the start of every session in this project.**
+
+### Proactive surfacing
+
+When the user describes a situation that has a clear matching entry in `QUICK_COMMANDS.md`, **surface the entry inline at the top of your response** before doing anything else, formatted as:
+
+> 📋 *Quick reference: `{exact command or prompt}` — {one-clause context}. (From `QUICK_COMMANDS.md`.)*
+
+Then continue with your normal response.
+
+**When NOT to surface:**
+- The command is already what you're about to run yourself (don't show the user a command and then immediately run it for them)
+- The user is asking a conceptual question that doesn't map to a single command
+- The matching entry is trivial or already obvious from the conversation
+
+When in doubt, do surface. False positives are mild noise; false negatives waste the cheatsheet's value.
+
+### Auto-appending new entries
+
+When you propose a new command, prompt, or shortcut during a session that the user might want to use again, **append it to `QUICK_COMMANDS.md`** in the appropriate section (`Starting and resuming Claude Code` / `Telling Claude what to do` / `Memory management` / `Git & GitHub` / `Terminal & Mac shortcuts` / `Project-specific files`). Then tell the user briefly:
+
+> *"Added this to `QUICK_COMMANDS.md` for next time."*
+
+Bump the **Last updated** date at the top of the file when you append.
+
+**Don't add entries that are:**
+- Sensitive (credentials, secrets, full SSH keys)
+- One-off / project-specific knowledge that belongs in memory or `PROJECT_BRIEF.md`
+- Untested or speculative commands
+
+---
+
 ## Quick references
 
 - **Navigation map (start here when lost):** `TABLE_OF_CONTENTS.md`
+- **Cheatsheet (commands + prompts):** `QUICK_COMMANDS.md`
 - **Resumes:** `Ayesha Resume/`
 - **Sample JDs (gold set):** `Job Posting samples/JD mapping to my exp..docx`
 - **Platform PM Analyzer (the scoring brain):** `Job Posting samples/Platform PM Role ANALYZER - Instructions.docx`

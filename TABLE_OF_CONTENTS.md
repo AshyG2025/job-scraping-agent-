@@ -7,7 +7,7 @@
 > - **Section 2 (Each file & folder explained)** — deeper reference. What each file does, how to use it, and concrete use cases.
 > - **Section 3 (When to consult this TOC)** — meta — when to open this file in the first place.
 >
-> **Last updated:** 2026-04-27
+> **Last updated:** 2026-04-27 (added `QUICK_COMMANDS.md` + Rule 6 reference)
 
 ---
 
@@ -62,6 +62,8 @@ The most common workflows you'll do, and exactly where to go.
 | Claude isn't being accurate / is hallucinating | `CLAUDE.md` § Rule 1 | Re-read; if rule isn't strong enough, refine |
 | Claude is using too much jargon | `CLAUDE.md` § Rule 2 | Reinforce or add a rule |
 | Starting a fresh Claude Code session | This file (`TABLE_OF_CONTENTS.md`) | Tell Claude: "Read TABLE_OF_CONTENTS.md and CLAUDE.md before doing anything else" |
+| I want a quick command / prompt I've seen before | `QUICK_COMMANDS.md` | Scan the cheatsheet by category — Claude will also auto-surface matching entries |
+| Claude proposed a new useful command/prompt | (Claude auto-adds to `QUICK_COMMANDS.md` per Rule 6) | Just confirm the entry looks right |
 
 ### Resume / cover letter work
 
@@ -101,6 +103,15 @@ The most common workflows you'll do, and exactly where to go.
 - **How to use it:** First file to open when lost.
 - **Use cases:** See Section 3 below.
 - **When to edit:** Every time you add a new file/folder, or change a workflow
+
+#### `QUICK_COMMANDS.md`
+- **What it is:** Cheatsheet of every command, prompt, and shortcut that's been useful in this project. Organized by what you're trying to do.
+- **How to use it:** Either scan it directly, or rely on Claude to auto-surface matching entries (per `CLAUDE.md` Rule 6) when you describe a relevant situation.
+- **Use cases:**
+  - You forgot the kickoff prompt for a fresh session
+  - You forgot how to test SSH auth, or the syntax for a git command
+  - You want to know all the project-specific prompts (re-run eval set, run deep dive, etc.)
+- **When to edit:** Claude appends new entries automatically when it suggests a useful pattern; you can also edit directly.
 
 #### `PROJECT_BRIEF.md`
 - **What it is:** Your "ideal next role" definition + flagship-project descriptions + resume-selection rules. The matcher's primary anchor.
