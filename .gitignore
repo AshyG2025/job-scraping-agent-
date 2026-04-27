@@ -1,0 +1,43 @@
+# macOS metadata files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor temp files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Local environment / secrets — NEVER commit these
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Python (for Session 2 code)
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Node (in case)
+node_modules/
+
+# Local-only working files
+_local/
+_drafts/
+scratch/
+
+# Personal experience artifacts — keep local only, never push to GitHub
+# (PROJECT_BRIEF.md captures the metrics needed by the agent in Ayesha's own words.
+#  Local Claude sessions can still read these files for resume/cover-letter work.)
+Product Experinces/
