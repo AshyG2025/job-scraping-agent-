@@ -2,7 +2,7 @@
 
 > **How this file is used:** The job-scraping agent reads this file as its primary anchor for what counts as a "good match." Edit freely — every change updates the matcher's behavior on the next run.
 >
-> **Last updated:** 2026-04-27
+> **Last updated:** 2026-04-28 (refreshed WFM canonical numbers to $20M cost / $17M revenue at 12–18 mo; added 4th flagship — Global E-Invoicing Platform / FinAuto — with design-phase facts from Blueprint + post-launch outcomes confirmed by user; added tweaked-resume routing rules + 6 tweaking patterns derived from ClassDojo/Wise/Liberis/Snorkel pairs)
 
 ---
 
@@ -74,16 +74,18 @@ Senior IC band at the target company / target geo. The agent doesn't filter on c
 
 ## My positioning (for the matcher to score against)
 
-**Primary narrative:** *Platform Product Manager with deep expertise building integration platforms, API products, and multi-stakeholder systems at scale. 7 years PM (11 years total). Consolidated 5 legacy systems into a unified platform serving 1,000+ external partners and 15+ internal teams at Amazon, designed 3-layer platform architecture with custom API suite, scaled from 5 pilot users to 80%+ adoption in 12 months, and delivered $13M+ in business impact across three flagship platforms.*
+**Primary narrative:** *Platform Product Manager with deep expertise building integration platforms, API products, multi-stakeholder systems, and regulatory product frameworks at scale. 7 years PM (11 years total). Consolidated 5 legacy systems into a unified platform serving 1,000+ external partners and 15+ internal teams at Amazon, designed 3-layer platform architecture with custom API suite, defined the global e-invoicing reference blueprint adopted across Amazon FinAuto's AP space, and delivered measurable impact across four flagship platform initiatives.*
 
-**Three flagship project anchors** (the matcher should map JD requirements to whichever of these is most relevant):
+**Four flagship project anchors** (the matcher should map JD requirements to whichever of these is most relevant):
 
 1. **WFM Vendor Central Integration Platform** (lead for: integration / API / multi-stakeholder / platform consolidation roles)
    - 5 systems → 1 unified platform; 1,000+ external suppliers + 15+ internal teams
    - 3-layer architecture (Presentation → Transformation → Data)
    - 3 core APIs (Item Registration, Mapping Lookup, Bulk Sync)
    - ID transformation system (ASIN ↔ UPC ↔ PLU)
-   - 90% onboarding-time reduction (8 weeks → 7 days), 80%+ adoption, $9.6M impact
+   - 90% onboarding-time reduction (8 weeks → 7 days); 80%+ adoption
+   - **Total cost discovered during initial project discovery: $20M** (the cost-savings opportunity that justified the program)
+   - **Revenue impact at 12–18 months post-launch: up to $17M generated through suppliers due to platform convergence**
 
 2. **Mexico Tax Reconciliation Automation Platform** (lead for: data / operations / FinTech platform roles)
    - Multi-system integration: Amazon payment systems + Mexican government tax portal
@@ -95,16 +97,88 @@ Senior IC band at the target company / target geo. The agent doesn't filter on c
    - Template-based architecture (3.5M invoices → 80 formats → 25 pilot templates)
    - 80%+ accuracy vs. 75% manual baseline; scaled 5 → 320 suppliers; $2M savings; 92% processing-time reduction
 
+4. **Global E-Invoicing Platform Framework / FinAuto** (lead for: invoicing / billing / e-invoicing / tax-compliance / multi-country product launch / regulatory product roles)
+
+   *Source-of-truth design document: `Product Experinces/FinAuto/E-Invoicing Blueprint - Final May 2022(1).docx.pdf`. Post-launch outcome values confirmed by user 2026-04-28 (measured 12–18 months after launch and scaling).*
+
+   **Design phase — facts from the May 2022 Blueprint:**
+   - Defined Amazon's global e-invoicing reference blueprint covering the inbound invoice lifecycle across 4 functional domains: **Ingestion, Processing, Booking, Reporting & Reconciliation**
+   - Authored **7 recommended solution patterns (RS1–RS7)** mapping clearance models (open vs. closed) and government-API availability to specific tech architectures
+   - Cataloged **27 product features (C1–C27)** across the inbound lifecycle with status, ownership, and applicable countries
+   - Reference country scope: **Brazil, Mexico, Poland, Turkey, Italy, Egypt, India** — covering both open and closed e-invoicing clearance models
+   - **Cross-org workgroup**: PMs across GIS, FinAuto, SPFT, FinTech, with contributions from Tax PMO, FinOps BP, E-Program. **12 working sessions** between 2022-02-14 kickoff and May 2022 publication
+   - Long-term framework adoption mechanism: E-invoicing Steering Committee + centralized E-Invoice Wiki + framework evaluation gate at each new project intake
+
+   **Post-launch outcomes (12–18 months after launch and scaling):**
+   - **5–6 country deployment** (KSA, Poland, Egypt, etc.) serving **tens of thousands of business users**
+   - **Reduced invoice rejection rates from 37% to under 10%**
+   - **Cut processing time from 2 days to 2 hours** for clean invoices
+   - **$25–30M annual reduction in vendor overpayments** across deployed markets
+   - **7 pre-configured solutions (RS1–RS7) adopted by 15+ countries**
+   - **Reduced new-country launch effort from 20+ engineering weeks to under 10 engineering weeks** (Blueprint set this as the design-phase target; achieved post-launch)
+
 ---
 
-## Resume selection guidance (for the asset matcher)
+## Resume selection guidance
 
-I keep two base resumes. The matcher should pick which to start from based on the JD:
+The agent reads from two distinct resume sets, depending on which step it's in.
+
+### Step 1 — Initial JD ranking & scoring (every role)
+
+The scoring step uses **only** the two top-level base resumes plus this brief — it does **not** read the `Resume to use repository/` subfolder. Mixing tweaked variants into the scoring context would muddy the signal of "what my actual experience looks like."
+
+| Base resume | Path |
+|---|---|
+| Platform-PM-optimized base | `Ayesha Resume/Ayesha Base Platform PM.docx` |
+| Generic 1-page PM base | `Ayesha Resume/Ayesha Ghoshal_Resume_2026.pdf` |
+
+### Step 2 — Asset matching (roles scored ≥ 7/10)
+
+For roles that pass scoring, the asset matcher picks a **starting resume** plus suggests bullet-level tweaks against the JD. The candidate set is wider here:
+
+1. **The two base resumes above** (default starting points)
+2. **Any past tweaked resume in `Ayesha Resume/Resume to use repository/`** — these are real resumes I've previously used for actual applications, kept as a starting library so we don't draft from scratch each time. If one is materially closer to the current JD than either base resume, prefer it as the starting point and explain why in the recommendation.
+
+**Default routing between the two base resumes:**
 
 | If JD emphasizes... | Start from |
 |---|---|
-| Platform architecture, APIs, integration, multi-stakeholder, B2B platform, marketplace | `Ayesha Resume/Ayesha Base Platform PM.docx` |
-| Broader PM / digital transformation / mixed B2B-B2C / FinTech generally | `Ayesha Resume/Ayesha Ghoshal_Resume_2026.pdf` |
+| Platform architecture, APIs, integration, multi-stakeholder, B2B platform, marketplace | `Ayesha Base Platform PM.docx` |
+| Broader PM / digital transformation / mixed B2B-B2C / FinTech generally | `Ayesha Ghoshal_Resume_2026.pdf` |
 | Hybrid / unclear | Default to Platform PM resume; flag for manual review |
 
-For any role scored ≥ 7/10, also recommend **specific bullet-level tweaks** to better mirror the JD's keywords (e.g., if JD says "developer experience," surface my NPS +35-40 and onboarding 8w→7d numbers; if JD says "platform consolidation," surface the 5→1 system bullet).
+**Default routing if a tweaked resume in `Resume to use repository/` is a closer fit:**
+
+These are real past-application resumes already pre-optimized for a specific domain. Prefer them over the bases when the JD strongly matches:
+
+| If JD primarily emphasizes... | Prefer starting from... |
+|---|---|
+| Identity / authentication / OAuth / federated identity / regulated or sensitive data | `Resume to use repository/Ayesha_resume_ClassDojo.docx` |
+| Invoicing / billing / B2B get-paid workflows / multi-country product launch / e-invoicing / tax compliance | `Resume to use repository/Ayesha CV Wise Invoicing role.pdf` |
+| Financial systems / payment rails / ledger / merchant identity / fintech infrastructure / vendor-to-AI migration | `Resume to use repository/Ayesha Liberis Platform PM.pdf` |
+| Data operations / workflow orchestration / human-in-the-loop / RLHF / data-production tooling | `Resume to use repository/Ayesha resume_Snorkel.ai.pdf` |
+
+⚠️ Each routing rule above is currently grounded in **1 confirmed past-application example**. As more (JD ↔ tweak) pairs are analyzed, confidence will grow. Treat each as a strong starting hypothesis, not a deterministic match. The matcher should always **explain why it picked the resume it did**, citing JD signals.
+
+**Bullet-level tweaks:** for any role scored ≥ 7/10, also recommend specific tweaks to better mirror the JD's keywords (e.g., if JD says "developer experience," surface my NPS +35-40 and onboarding 8w→7d numbers; if JD says "platform consolidation," surface the 5→1 system bullet). Per `CLAUDE.md` Rule 3, never invent or inflate metrics — quote only numbers that already appear in the source resume or in `Product Experinces/`.
+
+### Tweaking patterns (apply on top of any starting resume)
+
+These are the patterns derived from the 4 analyzed (JD ↔ tweak) pairs (ClassDojo, Wise Invoicing, Liberis, Snorkel.ai). The asset matcher should apply these consistently:
+
+1. **Headline domain swap** — replace the headline domain noun(s) with the JD's primary domain term(s). Examples seen: *"integration platforms"* → *"data operations platforms"*; *"platform architecture"* → *"identity & access infrastructure."*
+
+2. **Bullet retitle for domain alignment** — at least one Amazon experience bullet's title gets reworded to mirror the JD's primary domain term. The Mexico Tax Recon bullet is the most flexible — it has been retitled to *"Payments & Regulated Data Platform,"* *"Financial Operations & Payment Reconciliation,"* and *"Data Ingestion, Pipeline Design & Quality"* depending on JD.
+
+3. **Skills band re-leading** — reorder the skills section so the most JD-relevant band leads. For roles outside the canonical platform-PM identity (e.g., a domain-specific PM role like invoicing), the lead band may be entirely replaced with a JD-specific one.
+
+4. **Bullet reordering** — position 1 should be the project most aligned with the JD's primary domain. If the JD aligns with the integration-platform story, keep the canonical order; otherwise, surface the matching project (AI/ML, identity, invoicing, etc.) to position 1.
+
+5. **JD-language echoes** — embed 1–3 verbatim or near-verbatim phrases from the JD into bullets (*"comfortable working in ambiguity,"* *"human-in-the-loop,"* *"self-service,"* etc.). Surface phrasing only when the underlying experience genuinely supports it — never to fake a match.
+
+6. **UK address swap** — for UK-based roles, change the address header to *"London, UK (relocating from Seattle)."*
+
+**Authenticity guardrails (per `CLAUDE.md` Rule 1 + Rule 3):**
+- Use only the numbers from the "Three flagship project anchors" section above. If a tweaked resume in `Resume to use repository/` cites a different number for the same project, treat the figure in this brief as canonical.
+- Never invent project scope, impact figures, or claims.
+- If a tweak surfaces work that's hard to defend in a technical interview, flag for manual review rather than encoding it.

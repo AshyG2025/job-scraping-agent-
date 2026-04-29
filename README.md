@@ -162,6 +162,6 @@ The matcher will drift — Claude API gets updated, you'll edit the brief, real-
 
 ## Status
 
-🟡 **Session 1 in progress** — all spec docs done (BRIEF, FILTERS, COMPANY_LIST, SCORING_PROMPT, EVAL_SET, QC_PROCESS, TEMPLATE)
-🔴 No code yet — Session 2 will write scrapers, scoring runner, digest emailer, and the monthly QC workflow
-🔴 GitHub repo not created (waiting on Homebrew install)
+🟢 **Session 1 + 1.5 complete** — all spec docs shipped (`PROJECT_BRIEF`, `COMPANY_LIST`, `HARD_FILTERS`, `SCORING_PROMPT`, `APPLICATION_LOG`, `QC_PROCESS`, `docs/EVAL_SET`, `docs/CALIBRATION_DEEP_DIVE`, `docs/qc-reports/TEMPLATE`), plus `TABLE_OF_CONTENTS` and `QUICK_COMMANDS`
+🟢 **GitHub repo live** — private, at `github.com/AshyG2025/job-scraping-agent-` (initial push 2026-04-27)
+🔴 **Session 2 (code) not started** — scrapers, scoring runner, asset matcher, digest emailer, Google Sheets writer, and monthly QC workflow still to build

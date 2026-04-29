@@ -41,3 +41,7 @@ scratch/
 # (PROJECT_BRIEF.md captures the metrics needed by the agent in Ayesha's own words.
 #  Local Claude sessions can still read these files for resume/cover-letter work.)
 Product Experinces/
+
+# Parallel manual workflow — not part of the job-scraping agent.
+# Lives in the project root for convenience only; never push.
+London Headhunters/
