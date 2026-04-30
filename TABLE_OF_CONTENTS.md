@@ -7,7 +7,7 @@
 > - **Section 2 (Each file & folder explained)** — deeper reference. What each file does, how to use it, and concrete use cases.
 > - **Section 3 (When to consult this TOC)** — meta — when to open this file in the first place.
 >
-> **Last updated:** 2026-04-29 (added `COMPANY_LIST.md` § Referral Network row tied to applicant-noise penalty in `SCORING_PROMPT.md`)
+> **Last updated:** 2026-04-29 (Session 2 Phase A: added `scripts/score_jobs.py` runner, `MANUAL_JDS.md` paste-in, `MANUAL_JDS_PROCESSED.md` archive, `requirements.txt`, `.env`)
 
 ---
 
@@ -19,6 +19,7 @@ The most common workflows you'll do, and exactly where to go.
 
 | When this happens... | Go to... | What you'll do (~time) |
 |---|---|---|
+| I saw a JD on LinkedIn (or anywhere) the auto-scrapers missed | `MANUAL_JDS.md` → run `python scripts/score_jobs.py` | Paste the JD; runner scores it and writes results to `_local/digest.md` (~30 sec/JD) |
 | I receive the digest email | Email inbox + Google Sheet | Read top matches; mark `applied` Yes/No (~5 min) |
 | I just applied to a role | Google Sheet | Update `applied`, `applied_date`, `outcome_status: open` (~30 sec) |
 | A recruiter responded / I got a phone screen / interview / offer / rejection | Google Sheet | Update `outcome_status` + `outcome_date` + optional `outcome_notes` (~1 min) |
@@ -165,6 +166,41 @@ The most common workflows you'll do, and exactly where to go.
   - Monthly QC review (~15–20 min)
   - You forgot what triggers an inline alert → § "When QC alerts go off mid-month"
 - **When to edit:** If you change cadence (e.g., move to bi-weekly), add new alert triggers, or refine the ritual
+
+### `scripts/` folder
+
+#### `scripts/score_jobs.py`
+- **What it is:** The Phase A scoring runner. Reads JDs from `MANUAL_JDS.md`, sends each one to the Claude API along with `SCORING_PROMPT.md` + `PROJECT_BRIEF.md` + `COMPANY_LIST.md` as context (cached, so you only pay full price once per run), parses the JSON results, and writes:
+  - `_local/scored_results.json` — raw structured data
+  - `_local/digest.md` — human-readable summary
+  - Appends processed entries to `MANUAL_JDS_PROCESSED.md` and clears `MANUAL_JDS.md` so the same JD isn't re-scored.
+- **How to use it:** `source .venv/bin/activate && python scripts/score_jobs.py` from the project root. Reads your API key from `.env`.
+- **Use cases:**
+  - You pasted JDs into `MANUAL_JDS.md` and want to score them
+  - You want to validate a `SCORING_PROMPT.md` change against a real JD (paste one, run, inspect)
+- **When to edit:** When the scoring runner needs a feature change (new metadata field, different model, different output format). Tunables (model name, effort level, max tokens) live at the top of the file.
+
+### Root-level files added in Session 2 Phase A
+
+#### `MANUAL_JDS.md`
+- **What it is:** The manual paste-in for JDs the auto-scrapers (which arrive in Session 2 Phase B+) miss. One entry per JD; the runner reads them on the next invocation.
+- **How to use it:** Open the file, copy the `[TEMPLATE]` block, paste a real JD into a new entry, save. Run `python scripts/score_jobs.py`.
+- **Use cases:** A LinkedIn role you saw logged-in that the public scraper can't see; a JD a recruiter sent you directly; anything you want scored ad-hoc.
+- **When to edit:** Whenever you have a new JD to score. Cleared automatically after each successful run.
+
+#### `MANUAL_JDS_PROCESSED.md`
+- **What it is:** Append-only archive of every JD entry that's been scored. Auto-maintained by the runner.
+- **How to use it:** Read-only. Ignore unless you want a history of what's been scored.
+- **When to edit:** Don't.
+
+#### `requirements.txt`
+- **What it is:** Python dependencies for the scripts (`anthropic` + `python-dotenv`). Used by `pip install -r requirements.txt`.
+- **When to edit:** Only when adding a new Python package the scripts need.
+
+#### `.env` *(gitignored — never committed)*
+- **What it is:** Local secrets file. Currently holds `ANTHROPIC_API_KEY`. Read by `score_jobs.py` via `python-dotenv`.
+- **How to use it:** Edit in TextEdit (or any editor). Never paste its contents into chat or commit it.
+- **When to edit:** Only when rotating the API key, or adding new secrets in future sessions (e.g., a Google Sheets service account).
 
 ### `docs/` folder
 

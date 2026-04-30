@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-04-27
+> **Last updated:** 2026-04-29 (added Phase A scoring-runner setup + run commands)
 
 ---
 
@@ -75,6 +75,17 @@
 | Close the current Terminal tab | `Cmd + W` |
 | See a folder's contents | `ls "/path/to/folder"` |
 | Go to a folder | `cd "/path/to/folder"` |
+
+---
+
+## 🐍 Python scoring runner (Phase A)
+
+| When you want to... | Run / say... | Notes |
+|---|---|---|
+| First-time setup (one-time) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` | Creates a virtual env, installs `anthropic` + `python-dotenv`. Run from the project root. |
+| Activate the venv in a new terminal session | `source .venv/bin/activate` | Prefix changes to `(.venv)` to confirm. Needed before every run. |
+| Score whatever's in `MANUAL_JDS.md` | `python scripts/score_jobs.py` | Output: `_local/digest.md` + `_local/scored_results.json`. Reads `ANTHROPIC_API_KEY` from `.env`. |
+| Deactivate the venv | `deactivate` | Drops the `(.venv)` prefix; reverts to system Python. |
 
 ---
 
