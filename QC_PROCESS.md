@@ -61,6 +61,8 @@ The report lists any company surfaced via discovery mode that scored ≥ 7 this 
 - Promote to Tier 1 / Tier 2 in `COMPANY_LIST.md` (one-line edit)
 - Or leave as-is if it's a one-off
 
+**Plus a 30-sec scraper-volume sanity check:** glance at `_local/scraped_seen.json` and count entries added this month per configured company. Roughly 2–8 fresh roles per Tier-1 company per month is normal; 0 entries from a configured company over 4+ weeks signals a broken scraper (ATS changed, title regex no longer matches, etc.). If something's off, scan recent `run_scrapers.py` output for failure messages and check the relevant per-ATS module.
+
 ### 5. Application outcomes review (~5 min) — the calibration loop
 
 The QC report includes **calibration data from real applications** (see `APPLICATION_LOG.md`). This is the strongest tuning signal you have.

@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-04-30 (added `git diff` variants for skimming changes before commit)
+> **Last updated:** 2026-04-30 (Phase B: added `run_scrapers.py` command + full-pipeline one-liner; renamed Python section to cover Phases A + B)
 
 ---
 
@@ -81,13 +81,15 @@
 
 ---
 
-## 🐍 Python scoring runner (Phase A)
+## 🐍 Python pipeline (Phases A + B)
 
 | When you want to... | Run / say... | Notes |
 |---|---|---|
-| First-time setup (one-time) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` | Creates a virtual env, installs `anthropic` + `python-dotenv`. Run from the project root. |
+| First-time setup (one-time) | `python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt` | Creates a virtual env, installs `anthropic` + `python-dotenv` + `requests`. Run from the project root. |
 | Activate the venv in a new terminal session | `source .venv/bin/activate` | Prefix changes to `(.venv)` to confirm. Needed before every run. |
+| Run the auto-scrapers (Stripe + Wise) | `python scripts/run_scrapers.py` | Hits each company's ATS API, applies title/geo/age filters, dedupes against `_local/scraped_seen.json`, appends new JDs to `MANUAL_JDS.md`. Prints a per-company funnel summary. ~30 sec total. |
 | Score whatever's in `MANUAL_JDS.md` | `python scripts/score_jobs.py` | Output: `_local/digest.md` + `_local/scored_results.json`. Reads `ANTHROPIC_API_KEY` from `.env`. |
+| Full pipeline (scrape → score) | `python scripts/run_scrapers.py && python scripts/score_jobs.py` | Tuesday/Thursday-morning one-liner. ~5–10 min total + ~$1 in API cost per run. |
 | Deactivate the venv | `deactivate` | Drops the `(.venv)` prefix; reverts to system Python. |
 
 ---

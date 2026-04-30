@@ -7,7 +7,7 @@
 > - **Section 2 (Each file & folder explained)** — deeper reference. What each file does, how to use it, and concrete use cases.
 > - **Section 3 (When to consult this TOC)** — meta — when to open this file in the first place.
 >
-> **Last updated:** 2026-04-30 (portfolio prep: gitignored `MANUAL_JDS_PROCESSED.md`, `Ayesha Resume/Resume to use repository/`, `COMPANY_LIST.md`, and `PROJECT_BRIEF.md` as local-only working copies; added committed `COMPANY_LIST_PUBLIC.md` and `PROJECT_BRIEF_PUBLIC.md` as portfolio-friendly genericized framework copies; added `CLAUDE.md` Rule 7 governing local↔public sync; refreshed README Status section + added a platform-PM-lens framing subsection at the top of README)
+> **Last updated:** 2026-04-30 (Phase B shipped: added `scripts/run_scrapers.py` orchestrator + `scripts/scrapers/` package with `common.py`, `greenhouse.py`, `smartrecruiters.py`; QC_PROCESS gains a 30-sec scraper-volume sanity check; requirements.txt adds `requests`. Earlier same day: portfolio prep — gitignored `MANUAL_JDS_PROCESSED.md`, `Ayesha Resume/Resume to use repository/`, `COMPANY_LIST.md`, `PROJECT_BRIEF.md` as local-only working copies; added committed `*_PUBLIC.md` framework copies; added CLAUDE.md Rule 7; refreshed README Status + added platform-PM-lens framing subsection)
 
 ---
 
@@ -19,6 +19,7 @@ The most common workflows you'll do, and exactly where to go.
 
 | When this happens... | Go to... | What you'll do (~time) |
 |---|---|---|
+| It's my Tuesday/Thursday-morning routine | `python scripts/run_scrapers.py && python scripts/score_jobs.py` | Auto-scrapes Stripe + Wise, filters, scores survivors. ~5–10 min + ~$1 per run |
 | I saw a JD on LinkedIn (or anywhere) the auto-scrapers missed | `MANUAL_JDS.md` → run `python scripts/score_jobs.py` | Paste the JD; runner scores it and writes results to `_local/digest.md` (~30 sec/JD) |
 | I receive the digest email | Email inbox + Google Sheet | Read top matches; mark `applied` Yes/No (~5 min) |
 | I just applied to a role | Google Sheet | Update `applied`, `applied_date`, `outcome_status: open` (~30 sec) |
@@ -179,6 +180,24 @@ The most common workflows you'll do, and exactly where to go.
 
 ### `scripts/` folder
 
+#### `scripts/run_scrapers.py` *(Phase B orchestrator)*
+- **What it is:** Reads the `SOURCES` list at the top of the file, runs the matching ATS-specific scraper for each company, applies title/geo/age filters from `scrapers/common.py`, dedupes against `_local/scraped_seen.json`, and appends survivors to `MANUAL_JDS.md` as ready-to-score entries. Prints a per-company funnel summary (e.g. `Stripe: 491 total → 4 pass title → 4 pass geo → 2 pass age → 2 new`).
+- **How to use it:** `source .venv/bin/activate && python scripts/run_scrapers.py` from the project root. Run before `score_jobs.py`.
+- **Use cases:**
+  - Tuesday/Thursday-morning routine before the scoring run
+  - Adding a new company — append a dict to `SOURCES` (no other code change if the company uses an ATS we already support)
+- **When to edit:** When adding a new company, or supporting a new ATS (then also add a module under `scripts/scrapers/` and an entry in `ATS_MODULES`).
+
+#### `scripts/scrapers/` *(per-ATS scraper package)*
+- **What it is:** Modular per-ATS fetchers. Each module exposes the same two functions (`fetch_listing(slug, company_name)`, `fetch_jd_body(slug, job)`) so the orchestrator stays generic.
+  - `common.py` — shared helpers: title/geo/age filter regexes (mirror of `HARD_FILTERS.md`, in a TUNABLE PARAMETERS block at the top of the file), HTML→text cleanup, dedup cache I/O, MANUAL_JDS.md entry formatting.
+  - `greenhouse.py` — fetches jobs from Greenhouse-hosted careers pages via `boards-api.greenhouse.io` (no auth). Used for Stripe; works for many other employers (Plaid, Brex, Coinbase, etc.) by changing the slug.
+  - `smartrecruiters.py` — fetches jobs from SmartRecruiters-hosted careers pages via `api.smartrecruiters.com` (no auth, paginated list). Used for Wise; works for other SmartRecruiters customers.
+- **How to use it:** Don't run modules directly — `run_scrapers.py` orchestrates them.
+- **When to edit:**
+  - Filter regex changes → edit `common.py` TUNABLE PARAMETERS block, then mirror the change to `HARD_FILTERS.md` to keep the spec in sync.
+  - New ATS (Lever, Workday, Ashby) → add a new module exposing the two-function contract, then add it to `ATS_MODULES` in `run_scrapers.py`.
+
 #### `scripts/score_jobs.py`
 - **What it is:** The Phase A scoring runner. Reads JDs from `MANUAL_JDS.md`, sends each one to the Claude API along with `SCORING_PROMPT.md` + `PROJECT_BRIEF.md` + `COMPANY_LIST.md` as context (cached, so you only pay full price once per run), parses the JSON results, and writes:
   - `_local/scored_results.json` — raw structured data
@@ -205,7 +224,7 @@ The most common workflows you'll do, and exactly where to go.
 - **When to edit:** Don't.
 
 #### `requirements.txt`
-- **What it is:** Python dependencies for the scripts (`anthropic` + `python-dotenv`). Used by `pip install -r requirements.txt`.
+- **What it is:** Python dependencies for the scripts (`anthropic`, `python-dotenv`, `requests`). Used by `pip install -r requirements.txt`.
 - **When to edit:** Only when adding a new Python package the scripts need.
 
 #### `.env` *(gitignored — never committed)*
