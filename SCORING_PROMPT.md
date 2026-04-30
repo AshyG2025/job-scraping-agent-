@@ -41,6 +41,14 @@ dealbreaker_cap: 4         # If any dimension scores ≤ 2, final_score is cappe
 qc_sample_rate: 0.10       # 10% of roles get a verbose qc_deep_dive trace, randomly
 qc_force_top_score: true   # Always emit verbose trace for the highest-scoring role of each run
 qc_force_borderline: true  # Always emit verbose trace for any role within 1 point of the asset_match_threshold
+
+# Applicant-noise penalty — discount roles where Ayesha would just be noise in a crowded queue
+applicant_noise_penalty:
+  enabled: true
+  penalty: -1                  # subtracted from final_score (after dealbreaker cap, before [1,10] clamp)
+  age_threshold_days: 7        # only triggers if posting is older than this many days
+  applicants_threshold: 100    # only triggers if applicantsCount >= this number
+  override_via_referral: true  # skip penalty entirely if companyName is in COMPANY_LIST.md "Referral Network" section
 ```
 
 ---
@@ -190,6 +198,18 @@ final_score = round(
 
 If any dimension scores ≤ 2, **cap final_score at `dealbreaker_cap`** (default 4). One dealbreaker dimension means the role isn't actually viable, no matter how strong the others.
 
+### Applicant-noise penalty (post-score adjustment)
+
+After computing the weighted score and applying any dealbreaker cap, check the posting metadata:
+
+- IF the role was posted **more than `age_threshold_days` ago** (default: 7 days) AND has **`applicants_threshold` or more applicants** (default: 100), **subtract `penalty` from `final_score`** (default: −1).
+- **Exception:** if `companyName` appears in the **"Referral Network"** section of `COMPANY_LIST.md`, **skip the penalty** — Ayesha has a contact who can refer her, so a referral routes around the cold-applicant queue and volume becomes irrelevant.
+- Final clamp: ensure `final_score` stays in `[1, 10]`.
+
+Reasoning: applying cold to a role that's been live a week and already has 100+ applicants means Ayesha is noise in the recruiter's queue, not signal. The penalty discourages applications where the cost-per-application is high and the response-rate is low. Roles where she has a referral are exempt because the referral creates a separate signal channel that's independent of applicant volume.
+
+Emit `noise_penalty_applied: true/false` and `noise_penalty_reason: "..."` in the JSON output for QC traceability.
+
 ## Score → verdict mapping
 
 | Score | Verdict | Action |
@@ -250,6 +270,7 @@ Two reasoning fields are **always present** so QC is possible on every score:
   "location": "London, UK",
   "posting_url": "https://wise.com/jobs/...",
   "posting_age_days": 4,
+  "applicants_count": 32,
 
   "scores": {
     "domain": 9,
@@ -259,6 +280,9 @@ Two reasoning fields are **always present** so QC is possible on every score:
   },
   "final_score": 9,
   "verdict": "prioritize",
+
+  "noise_penalty_applied": false,
+  "noise_penalty_reason": "Posting is 4 days old (under 7-day threshold) — penalty does not trigger.",
 
   "reason_short": "Multi-system ledger platform processing 2bn+ journal entries/month maps cleanly to her Mexico Tax Recon + Supplier Convergence work. Senior IC scope, technical-depth-required language, London (no visa filter).",
 

@@ -124,6 +124,23 @@ Roles from companies *not* on this list pass through scoring with a `discovery: 
 
 ---
 
+## Referral Network — companies where I have a contact who could refer me
+
+> **What this section does:** Companies listed here **bypass the applicant-noise penalty** in `SCORING_PROMPT.md` (the −1 score deduction for >7-day-old roles with 100+ applicants). Reason: a referral routes around the cold-applicant queue, so applicant volume is no longer a meaningful signal — my application enters via a different channel.
+>
+> **Format:** company name on each line, one per row. Optional inline note about the contact (helpful for your reference; the matcher only reads the company name). The match is on `companyName` from the scraped JD, so use the company's official name as it appears on LinkedIn (e.g., `Stripe`, `Wise`, `ClassDojo`).
+>
+> **Maintenance:** add companies as your network grows. Remove if a contact leaves or the relationship goes cold.
+
+- **Microsoft**
+- **Zillow**
+- **eBay**
+- **Meta**
+- **Visa**
+- **Wise**
+
+---
+
 ## Companies to research and add (parking lot)
 
 > Add candidates here when I think of them; I'll triage into tiers later.

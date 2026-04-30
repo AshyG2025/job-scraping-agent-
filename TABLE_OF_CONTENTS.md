@@ -7,7 +7,7 @@
 > - **Section 2 (Each file & folder explained)** — deeper reference. What each file does, how to use it, and concrete use cases.
 > - **Section 3 (When to consult this TOC)** — meta — when to open this file in the first place.
 >
-> **Last updated:** 2026-04-28 (added `Resume to use repository/` subfolder + `London Headhunters/` disambiguation; refreshed README status)
+> **Last updated:** 2026-04-29 (added `COMPANY_LIST.md` § Referral Network row tied to applicant-noise penalty in `SCORING_PROMPT.md`)
 
 ---
 
@@ -31,6 +31,7 @@ The most common workflows you'll do, and exactly where to go.
 |---|---|---|
 | I learn about a new company I want to track | `COMPANY_LIST.md` | Add a bullet under the right tier; commit |
 | I want to drop a company entirely | `COMPANY_LIST.md` | Move to `Skip` section or delete; commit |
+| I now have a contact who could refer me at company X | `COMPANY_LIST.md` § Referral Network | Add the company; bypasses the applicant-noise penalty in scoring |
 | I want to broaden / narrow geography | `HARD_FILTERS.md` § 3 | Edit the geo allowlist; commit |
 | I want to filter out a title pattern | `HARD_FILTERS.md` § 1 or 2 | Add to drop list; commit |
 | I want to change cadence (run more / less often) | `.github/workflows/scrape.yml` *(Session 2)* | Edit the cron line |
