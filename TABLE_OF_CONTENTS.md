@@ -7,7 +7,7 @@
 > - **Section 2 (Each file & folder explained)** — deeper reference. What each file does, how to use it, and concrete use cases.
 > - **Section 3 (When to consult this TOC)** — meta — when to open this file in the first place.
 >
-> **Last updated:** 2026-04-29 (Session 2 Phase A: added `scripts/score_jobs.py` runner, `MANUAL_JDS.md` paste-in, `MANUAL_JDS_PROCESSED.md` archive, `requirements.txt`, `.env`)
+> **Last updated:** 2026-04-30 (portfolio prep: gitignored `MANUAL_JDS_PROCESSED.md`, `Ayesha Resume/Resume to use repository/`, `COMPANY_LIST.md`, and `PROJECT_BRIEF.md` as local-only working copies; added committed `COMPANY_LIST_PUBLIC.md` and `PROJECT_BRIEF_PUBLIC.md` as portfolio-friendly genericized framework copies; added `CLAUDE.md` Rule 7 governing local↔public sync; refreshed README Status section + added a platform-PM-lens framing subsection at the top of README)
 
 ---
 
@@ -115,23 +115,33 @@ The most common workflows you'll do, and exactly where to go.
   - You want to know all the project-specific prompts (re-run eval set, run deep dive, etc.)
 - **When to edit:** Claude appends new entries automatically when it suggests a useful pattern; you can also edit directly.
 
-#### `PROJECT_BRIEF.md`
-- **What it is:** Your "ideal next role" definition + flagship-project descriptions + resume-selection rules. The matcher's primary anchor.
-- **How to use it:** Read this when you want to remind yourself what counts as "good." Edit when your career direction shifts.
+#### `PROJECT_BRIEF.md` *(gitignored — local-only working copy)*
+- **What it is:** "Ideal next role" definition + flagship-project descriptions + resume-selection rules + comp expectations + named-company target list + file-pathed routing for tweaked-resume variants. The matcher's primary anchor. Read by the scoring runner (`scripts/score_jobs.py`) at scoring time.
+- **How to use it:** Edit when your career direction shifts. Per `CLAUDE.md` Rule 7, propagate framework changes (role brief, great-match / weak-match criteria, geography rules, flagship metrics, resume-selection routing logic) to `PROJECT_BRIEF_PUBLIC.md` in the same edit.
 - **Use cases:**
   - "What types of roles am I actually looking for?" → read § Role brief
-  - "What did I do at Amazon, with real metrics?" → read § Three flagship project anchors
+  - "What did I do at Amazon, with real metrics?" → read § Four flagship project anchors
   - "Should this role's resume start from Platform PM or generic?" → § Resume selection guidance
 - **When to edit:** Career-direction shifts (e.g., "I'm now also open to data platform roles"), updated metrics on flagship projects, comp expectations changing
 
-#### `COMPANY_LIST.md`
-- **What it is:** Tier 1/2/3/Skip company list + Discovery sources (LinkedIn, TrueUp, YC Work at a Startup, VC portfolio boards). Source of truth for the H1B filter.
-- **How to use it:** Add/remove companies; promote discovery roles into named tiers.
+#### `PROJECT_BRIEF_PUBLIC.md` *(committed to GitHub)*
+- **What it is:** Genericized portfolio-friendly version of `PROJECT_BRIEF.md`. Comp expectations and named-company target lists removed; flagship project metrics preserved (per user instruction); resume routing anonymized to "Domain-tailored variant (X)" descriptors.
+- **How to use it:** This is what GitHub portfolio viewers see. Don't edit by hand in isolation — keep in sync with `PROJECT_BRIEF.md` per `CLAUDE.md` Rule 7.
+- **When to edit:** Whenever framework / criteria / flagship metrics in `PROJECT_BRIEF.md` change.
+
+#### `COMPANY_LIST.md` *(gitignored — local-only working copy)*
+- **What it is:** Tier 1/2/3/Skip named-company list + Discovery sources (LinkedIn, TrueUp, YC Work at a Startup, VC portfolio boards) + Referral Network. Source of truth for the H1B filter and for the targeted scraper. Read by the scoring runner at scoring time.
+- **How to use it:** Add / remove companies in this local working copy; promote discovery roles into named tiers. Per `CLAUDE.md` Rule 7, propagate framework changes (new tier, new sub-tier, changed filter logic) to `COMPANY_LIST_PUBLIC.md` in the same edit. Adding / removing a specific company doesn't propagate.
 - **Use cases:**
-  - You read about Stripe acquiring Bridge → add to Tier 1 or Tier 2
+  - You read about a relevant acquisition → add to the right tier
   - You decide to deprioritize a sector → move to Skip
-  - QC report says "Liberis surfaced 3 strong matches via discovery" → promote Liberis from Tier 1 (already there) or document the trend
+  - QC report flags a discovery-mode company surfacing 3+ strong matches → promote into a named tier
 - **When to edit:** Anytime you learn of a new company; at every monthly QC
+
+#### `COMPANY_LIST_PUBLIC.md` *(committed to GitHub)*
+- **What it is:** Genericized portfolio-friendly version of the tier framework + discovery sources. Specific company names and the H1B-status field are stripped; tier descriptions, filter logic, and aggregator-board list are kept.
+- **How to use it:** This is what GitHub portfolio viewers see. Don't edit by hand in isolation — keep in sync with `COMPANY_LIST.md` per `CLAUDE.md` Rule 7.
+- **When to edit:** When framework structure changes in the local working copy (new tier, new sub-tier, changed filter logic) — not when a specific company is added / removed.
 
 #### `HARD_FILTERS.md`
 - **What it is:** Pre-LLM rules. Drops obvious no-go roles before they hit the (paid) Claude scoring step. Covers titles, geos, H1B, freshness, dedup.
@@ -188,9 +198,10 @@ The most common workflows you'll do, and exactly where to go.
 - **Use cases:** A LinkedIn role you saw logged-in that the public scraper can't see; a JD a recruiter sent you directly; anything you want scored ad-hoc.
 - **When to edit:** Whenever you have a new JD to score. Cleared automatically after each successful run.
 
-#### `MANUAL_JDS_PROCESSED.md`
+#### `MANUAL_JDS_PROCESSED.md` *(gitignored — local-only)*
 - **What it is:** Append-only archive of every JD entry that's been scored. Auto-maintained by the runner.
 - **How to use it:** Read-only. Ignore unless you want a history of what's been scored.
+- **Why gitignored:** Pushing this to a public/portfolio repo would expose which JDs (potentially including the recipient's own) you've scored. Kept local-only since the scoring trace + digest in `_local/` already cover everything you need day-to-day.
 - **When to edit:** Don't.
 
 #### `requirements.txt`
@@ -233,10 +244,10 @@ The most common workflows you'll do, and exactly where to go.
 
 #### `Ayesha Resume/`
 - **What it is:** Two base resumes that anchor the agent + a growing repository of past tweaked variants. The folder has two distinct roles depending on which agent step is running.
-  - **Top level** — used by both **scoring** (Step 1) and **asset matching** (Step 2):
+  - **Top level** *(committed to GitHub)* — used by both **scoring** (Step 1) and **asset matching** (Step 2):
     - `Ayesha Base Platform PM.docx` — Platform-PM-optimized base
     - `Ayesha Ghoshal_Resume_2026.pdf` — Generic 1-page PM base
-  - **`Resume to use repository/` subfolder** — used **only** by asset matching (Step 2), **NOT** by scoring. Houses real tweaked resumes Ayesha has used for past applications, so the asset matcher has more candidate starting points than just the two bases. Currently: `Ayesha Ghoshal_MSFT.pdf`, `Ayesha_resume_ClassDojo.docx`. Will grow over time.
+  - **`Resume to use repository/` subfolder** *(gitignored — local-only)* — used **only** by asset matching (Step 2), **NOT** by scoring. Houses real tweaked resumes Ayesha has used for past applications, so the asset matcher has more candidate starting points than just the two bases. Local Claude sessions can still read these files for resume/cover-letter work. **Why gitignored:** these tailored resumes name competitors and prior application targets — not safe to surface in a public/portfolio repo.
 - **How to use it:** Drop new tweaked variants in `Resume to use repository/` after each real application. Only update the top-level bases when your headline positioning changes.
 - **Use cases:**
   - Headline positioning changed → replace the relevant top-level base file

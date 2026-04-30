@@ -1,8 +1,12 @@
-# Project Brief — Ideal Next Role
+# Project Brief — Ideal Next Role (public copy)
 
-> **How this file is used:** The job-scraping agent reads this file as its primary anchor for what counts as a "good match." Edit freely — every change updates the matcher's behavior on the next run.
+> **What this file is:** The agent's primary anchor for what counts as a "good match." The working copy with personal/strategic detail (named-company target lists, comp expectations, file-pathed resume routing) is kept local-only — see `PROJECT_BRIEF.md` in the project's local working tree (gitignored).
 >
-> **Last updated:** 2026-04-28 (refreshed WFM canonical numbers to $20M cost / $17M revenue at 12–18 mo; added 4th flagship — Global E-Invoicing Platform / FinAuto — with design-phase facts from Blueprint + post-launch outcomes confirmed by user; added tweaked-resume routing rules + 6 tweaking patterns derived from ClassDojo/Wise/Liberis/Snorkel pairs)
+> **Why the split:** Personal context (comp expectations, visa status), specific resume file paths, and competitor-named past-application analyses are kept local; the role brief, flagship project anchors, and resume-selection logic are visible here as PM design content.
+>
+> **Sync rule:** Per `CLAUDE.md` Rule 7, framework changes to the local working copy (role brief, great-match / weak-match criteria, geography rules, flagship metrics, resume-selection routing logic) must be reflected here in the same edit. Adding / removing specific companies in target lists, editing the comp section, or adjusting Referral Network does not propagate.
+>
+> **Last updated:** 2026-04-30 (initial public copy — genericized from local source)
 
 ---
 
@@ -47,12 +51,13 @@ The agent should **down-rank or filter out** roles that look like:
 
 ## Companies and stages I'm targeting
 
-**Primary targets** (see `COMPANY_LIST.md` for the full ranked list):
-- Big Tech / Public: Amazon, Microsoft, Google, Meta, Visa, PayPal, Salesforce, ServiceNow, Atlassian, Stripe, Uber, DoorDash, Airbnb, Zillow
-- Growth-stage FinTech: Wise, Revolut, Stripe, Bill.com, Adyen, Plaid, Brex, Ramp, Mercury, Liberis, Deliveroo (London)
-- B2B SaaS: any Series C+ with platform/API products
+**Primary targets** (see `COMPANY_LIST_PUBLIC.md` for the public tiered framework; the named per-tier list is in the local working copy):
+- Big Tech / Public US tech employers with platform / integration / API PM roles in scope and an established H1B-PM sponsorship track record
+- Growth-stage FinTech (Series C+) — payment platforms, B2B fintech rails, embedded finance, banking-as-a-platform, BNPL, marketplace platforms
+- B2B SaaS — any Series C+ with platform / API products
+- UK / London — public tech and growth-stage employers in B2B SaaS / FinTech (no visa filter)
 
-I'm also **open to companies not on the list** if a Senior Platform PM role surfaces that strongly maps to my experience — the agent's discovery mode (LinkedIn / TrueUp pull) should catch these.
+I'm also **open to companies not on the named list** if a Senior Platform PM role surfaces that strongly maps to my experience — the agent's discovery mode (LinkedIn / TrueUp / YC / VC portfolio boards) should catch these.
 
 ---
 
@@ -60,15 +65,9 @@ I'm also **open to companies not on the list** if a Senior Platform PM role surf
 
 - **Seattle, WA** — open
 - **San Francisco / Bay Area** — open
-- **London, UK** — open (British citizen, no visa issue, more flexibility on company stage)
+- **London, UK** — open
 - **Anywhere else** — skip
-- **US roles** — must be at a company with credible H1B-PM sponsorship track record. If unclear, flag as ⚠️ for me to research, don't auto-include.
-
----
-
-## Comp expectation
-
-Senior IC band at the target company / target geo. The agent doesn't filter on comp directly (most postings hide it), but flag any posting that explicitly states a comp range below a Senior IC bar so I can deprioritize.
+- **US roles** — hard-filtered against the H1B-PM sponsorship track record maintained in the local working copy of `COMPANY_LIST.md`. Roles at companies without a credible track record get a ⚠️ verify flag rather than auto-including.
 
 ---
 
@@ -99,8 +98,6 @@ Senior IC band at the target company / target geo. The agent doesn't filter on c
 
 4. **Global E-Invoicing Platform Framework / FinAuto** (lead for: invoicing / billing / e-invoicing / tax-compliance / multi-country product launch / regulatory product roles)
 
-   *Source-of-truth design document: `Product Experinces/FinAuto/E-Invoicing Blueprint - Final May 2022(1).docx.pdf`. Post-launch outcome values confirmed by user 2026-04-28 (measured 12–18 months after launch and scaling).*
-
    **Design phase — facts from the May 2022 Blueprint:**
    - Defined Amazon's global e-invoicing reference blueprint covering the inbound invoice lifecycle across 4 functional domains: **Ingestion, Processing, Booking, Reporting & Reconciliation**
    - Authored **7 recommended solution patterns (RS1–RS7)** mapping clearance models (open vs. closed) and government-API availability to specific tech architectures
@@ -125,7 +122,7 @@ The agent reads from two distinct resume sets, depending on which step it's in.
 
 ### Step 1 — Initial JD ranking & scoring (every role)
 
-The scoring step uses **only** the two top-level base resumes plus this brief — it does **not** read the `Resume to use repository/` subfolder. Mixing tweaked variants into the scoring context would muddy the signal of "what my actual experience looks like."
+The scoring step uses **only** the two top-level base resumes plus this brief — it does **not** read the local-only tweaked-resume repository. Mixing tweaked variants into the scoring context would muddy the signal of "what my actual experience looks like."
 
 | Base resume | Path |
 |---|---|
@@ -137,7 +134,7 @@ The scoring step uses **only** the two top-level base resumes plus this brief �
 For roles that pass scoring, the asset matcher picks a **starting resume** plus suggests bullet-level tweaks against the JD. The candidate set is wider here:
 
 1. **The two base resumes above** (default starting points)
-2. **Any past tweaked resume in `Ayesha Resume/Resume to use repository/`** — these are real resumes I've previously used for actual applications, kept as a starting library so we don't draft from scratch each time. If one is materially closer to the current JD than either base resume, prefer it as the starting point and explain why in the recommendation.
+2. **Any past tweaked resume in the local-only resume repository** — these are real resumes I've previously used for actual applications, kept as a starting library so we don't draft from scratch each time. If one is materially closer to the current JD than either base resume, prefer it as the starting point and explain why in the recommendation.
 
 **Default routing between the two base resumes:**
 
@@ -147,24 +144,24 @@ For roles that pass scoring, the asset matcher picks a **starting resume** plus 
 | Broader PM / digital transformation / mixed B2B-B2C / FinTech generally | `Ayesha Ghoshal_Resume_2026.pdf` |
 | Hybrid / unclear | Default to Platform PM resume; flag for manual review |
 
-**Default routing if a tweaked resume in `Resume to use repository/` is a closer fit:**
+**Default routing if a tweaked resume in the local-only repository is a closer fit:**
 
-These are real past-application resumes already pre-optimized for a specific domain. Prefer them over the bases when the JD strongly matches:
+These are real past-application resumes pre-optimized for a specific domain. The repository is gitignored (kept local-only); the asset matcher reads it during the local scoring pass. Prefer them over the bases when the JD strongly matches:
 
 | If JD primarily emphasizes... | Prefer starting from... |
 |---|---|
-| Identity / authentication / OAuth / federated identity / regulated or sensitive data | `Resume to use repository/Ayesha_resume_ClassDojo.docx` |
-| Invoicing / billing / B2B get-paid workflows / multi-country product launch / e-invoicing / tax compliance | `Resume to use repository/Ayesha CV Wise Invoicing role.pdf` |
-| Financial systems / payment rails / ledger / merchant identity / fintech infrastructure / vendor-to-AI migration | `Resume to use repository/Ayesha Liberis Platform PM.pdf` |
-| Data operations / workflow orchestration / human-in-the-loop / RLHF / data-production tooling | `Resume to use repository/Ayesha resume_Snorkel.ai.pdf` |
+| Identity / authentication / OAuth / federated identity / regulated or sensitive data | Domain-tailored variant (identity / auth) |
+| Invoicing / billing / B2B get-paid workflows / multi-country product launch / e-invoicing / tax compliance | Domain-tailored variant (invoicing / e-invoicing) |
+| Financial systems / payment rails / ledger / merchant identity / fintech infrastructure / vendor-to-AI migration | Domain-tailored variant (fintech / payment infra) |
+| Data operations / workflow orchestration / human-in-the-loop / RLHF / data-production tooling | Domain-tailored variant (data ops / human-in-the-loop) |
 
 ⚠️ Each routing rule above is currently grounded in **1 confirmed past-application example**. As more (JD ↔ tweak) pairs are analyzed, confidence will grow. Treat each as a strong starting hypothesis, not a deterministic match. The matcher should always **explain why it picked the resume it did**, citing JD signals.
 
-**Bullet-level tweaks:** for any role scored ≥ 7/10, also recommend specific tweaks to better mirror the JD's keywords (e.g., if JD says "developer experience," surface my NPS +35-40 and onboarding 8w→7d numbers; if JD says "platform consolidation," surface the 5→1 system bullet). Per `CLAUDE.md` Rule 3, never invent or inflate metrics — quote only numbers that already appear in the source resume or in `Product Experinces/`.
+**Bullet-level tweaks:** for any role scored ≥ 7/10, also recommend specific tweaks to better mirror the JD's keywords (e.g., if JD says "developer experience," surface the NPS +35-40 and onboarding 8w→7d numbers; if JD says "platform consolidation," surface the 5→1 system bullet). Per `CLAUDE.md` Rule 3, never invent or inflate metrics — quote only numbers that already appear in the source resume or in `Product Experinces/`.
 
 ### Tweaking patterns (apply on top of any starting resume)
 
-These are the patterns derived from the 4 analyzed (JD ↔ tweak) pairs (ClassDojo, Wise Invoicing, Liberis, Snorkel.ai). The asset matcher should apply these consistently:
+These are the patterns derived from 4 analyzed past-application (JD ↔ tweak) pairs. The asset matcher should apply these consistently:
 
 1. **Headline domain swap** — replace the headline domain noun(s) with the JD's primary domain term(s). Examples seen: *"integration platforms"* → *"data operations platforms"*; *"platform architecture"* → *"identity & access infrastructure."*
 
@@ -179,6 +176,6 @@ These are the patterns derived from the 4 analyzed (JD ↔ tweak) pairs (ClassDo
 6. **UK address swap** — for UK-based roles, change the address header to *"London, UK (relocating from Seattle)."*
 
 **Authenticity guardrails (per `CLAUDE.md` Rule 1 + Rule 3):**
-- Use only the numbers from the "Three flagship project anchors" section above. If a tweaked resume in `Resume to use repository/` cites a different number for the same project, treat the figure in this brief as canonical.
+- Use only the numbers from the "Four flagship project anchors" section above. If a tweaked resume in the local-only repository cites a different number for the same project, treat the figure in this brief as canonical.
 - Never invent project scope, impact figures, or claims.
 - If a tweak surfaces work that's hard to defend in a technical interview, flag for manual review rather than encoding it.

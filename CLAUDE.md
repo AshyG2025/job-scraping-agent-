@@ -104,6 +104,34 @@ Bump the **Last updated** date at the top of the file when you append.
 
 ---
 
+## Rule 7: Keep public/private file pairs in sync.
+
+Two source-of-truth files are kept local-only (gitignored) with public-facing portfolio copies committed to GitHub:
+
+| Local source-of-truth (read by the runner) | Public copy (on GitHub for portfolio) |
+|---|---|
+| `COMPANY_LIST.md` | `COMPANY_LIST_PUBLIC.md` |
+| `PROJECT_BRIEF.md` | `PROJECT_BRIEF_PUBLIC.md` |
+
+The local files are read by the scoring runner (`scripts/score_jobs.py`) and asset matcher; the public files exist only as portfolio-friendly framework summaries with personal/strategic detail anonymized.
+
+**When the local file changes, automatically update the public copy in the same edit** — anonymized per the patterns already established in the public files (named companies → category descriptors; personal / visa / comp / contact-network reveals → omit; file-pathed resume routing → generic "Domain-tailored variant (X)" descriptors).
+
+**When to propagate to the public copy:**
+- New tier or sub-tier added to the framework
+- H1B-filter or hard-filter logic changes
+- Role brief, "great match" / "weak match" criteria, or geography rules change
+- Flagship project anchors added / removed, or canonical metrics updated
+- Resume-selection routing logic changes
+
+**When NOT to propagate:**
+- Adding / removing / re-tiering a specific company (the public copy doesn't enumerate companies)
+- Editing the Referral Network list, comp section, or other sections that don't appear in the public copy
+
+After updating the public copy, bump its `**Last updated:**` line at the top.
+
+---
+
 ## Quick references
 
 - **Navigation map (start here when lost):** `TABLE_OF_CONTENTS.md`
@@ -111,6 +139,6 @@ Bump the **Last updated** date at the top of the file when you append.
 - **Resumes:** `Ayesha Resume/`
 - **Sample JDs (gold set):** `Job Posting samples/JD mapping to my exp..docx`
 - **Platform PM Analyzer (the scoring brain):** `Job Posting samples/Platform PM Role ANALYZER - Instructions.docx`
-- **Project brief (what counts as a good role):** `PROJECT_BRIEF.md`
-- **Companies in scope:** `COMPANY_LIST.md`
+- **Project brief (what counts as a good role):** `PROJECT_BRIEF.md` *(local-only working copy; public framework summary at `PROJECT_BRIEF_PUBLIC.md`)*
+- **Companies in scope:** `COMPANY_LIST.md` *(local-only working copy; public framework summary at `COMPANY_LIST_PUBLIC.md`)*
 - **Pre-LLM filter rules:** `HARD_FILTERS.md`

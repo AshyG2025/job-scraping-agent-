@@ -6,6 +6,21 @@ This is a personal project for **Ayesha Ghoshal** — currently Sr. PM-Tech (L6)
 
 ---
 
+## Why this is interesting from a platform-PM lens
+
+Most "AI side projects" are demos. This one is structured the way a platform PM would build an internal AI tool — with the boring scaffolding that actually decides whether an LLM-powered system holds up in production:
+
+- **Eval-driven from day 1.** Every prompt change is validated against a labeled gold set (`docs/EVAL_SET.md`) before it ships; targets are anchored to my own outcomes, not vibes.
+- **Calibration as a first-class concern.** The monthly QC ritual (`QC_PROCESS.md`) builds a calibration table by score band; an inverted-calibration deep-dive playbook (`docs/CALIBRATION_DEEP_DIVE.md`) fires when the rubric breaks rather than letting drift accumulate.
+- **Cost discipline at the boundary.** Pre-LLM hard filters (`HARD_FILTERS.md`) drop obvious no-go roles before they reach the paid scoring step; the system prompt is cached (~19.5K tokens) so per-call cost stays under $0.15 with high-effort thinking on Opus 4.7.
+- **Observability for non-deterministic systems.** Every scored role emits a verbose `reasoning_trace` plus a `verify_flags` field for self-flagged uncertainty. That field caught a parser bug in v1 of the runner before any digest shipped — a working example of why audit trails are not optional for LLM pipelines.
+- **Versioned prompts + schema'd outputs.** `prompt_version` is frozen at scoring time so historical scores stay interpretable; the JSON output schema is the contract every downstream step depends on.
+- **Outcome-tied feedback loop.** Application outcomes (response / phone screen / interview / offer) flow back into the calibration table, so the rubric tunes against ground truth instead of intuition (`APPLICATION_LOG.md`).
+
+The "personal job search" framing is the demo — the interesting part is the platform-PM design choices behind it.
+
+---
+
 ## How it works (the pipeline)
 
 ```
@@ -69,8 +84,8 @@ This is a personal project for **Ayesha Ghoshal** — currently Sr. PM-Tech (L6)
 
 | File | What it controls | Edit when... |
 |---|---|---|
-| `PROJECT_BRIEF.md` | Ideal-role definition; the matcher's anchor | I want to change what counts as a "good fit" |
-| `COMPANY_LIST.md` | Tier 1/2/3 named companies + discovery sources | I learn about a new company / want to add or remove one |
+| `PROJECT_BRIEF_PUBLIC.md` | Ideal-role definition framework — the matcher's anchor *(named-company targets, comp expectations, and file-pathed resume routing live in the local-only working copy `PROJECT_BRIEF.md`)* | I want to change what counts as a "good fit" |
+| `COMPANY_LIST_PUBLIC.md` | Tier framework + discovery sources *(named per-tier list and Referral Network live in the local-only working copy `COMPANY_LIST.md`)* | I learn about a new company / want to add or remove one |
 | `HARD_FILTERS.md` | Pre-LLM rules (titles, geo, H1B, freshness) | I want to tighten or loosen filtering |
 | `SCORING_PROMPT.md` | The Claude prompt that scores each role | I want to change scoring criteria or output format |
 | `docs/EVAL_SET.md` | Labeled sample postings for testing the prompt | A scored role disagrees with my judgment — add it here as a labeled example |
@@ -162,6 +177,10 @@ The matcher will drift — Claude API gets updated, you'll edit the brief, real-
 
 ## Status
 
-🟢 **Session 1 + 1.5 complete** — all spec docs shipped (`PROJECT_BRIEF`, `COMPANY_LIST`, `HARD_FILTERS`, `SCORING_PROMPT`, `APPLICATION_LOG`, `QC_PROCESS`, `docs/EVAL_SET`, `docs/CALIBRATION_DEEP_DIVE`, `docs/qc-reports/TEMPLATE`), plus `TABLE_OF_CONTENTS` and `QUICK_COMMANDS`
-🟢 **GitHub repo live** — private, at `github.com/AshyG2025/job-scraping-agent-` (initial push 2026-04-27)
-🔴 **Session 2 (code) not started** — scrapers, scoring runner, asset matcher, digest emailer, Google Sheets writer, and monthly QC workflow still to build
+🟢 **Spec layer complete** (Sessions 1 + 1.5–1.7) — all spec docs shipped: `PROJECT_BRIEF`, `COMPANY_LIST`, `HARD_FILTERS`, `SCORING_PROMPT`, `APPLICATION_LOG`, `QC_PROCESS`, `docs/EVAL_SET`, `docs/CALIBRATION_DEEP_DIVE`, `docs/qc-reports/TEMPLATE`, plus `TABLE_OF_CONTENTS` and `QUICK_COMMANDS`.
+
+🟢 **Phase A — scoring runner shipped** (Session 2.0, commit `2987855`) — `scripts/score_jobs.py` reads JDs from `MANUAL_JDS.md`, scores each via the Claude API (Opus 4.7, prompt caching on the 3-file system context), and writes a digest to `_local/digest.md` plus structured results to `_local/scored_results.json`. Validated end-to-end on real postings; eval-set anchors hold within ±1 of target. The verbose `verify_flags` field caught a v1 parser bug before any digest landed.
+
+🟡 **Phase B — career-page scrapers** — next up. Starting narrow (Stripe + Wise) before scaling toward ~50–70 named companies. Same `score_jobs.py` brain — scrapers just feed it.
+
+🔴 **Phases C–E — not yet built** — Google Sheets storage, email digest delivery (Resend / Gmail), GitHub Actions cron schedule (Tue + Thu mornings PT).

@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-04-29 (added Phase A scoring-runner setup + run commands)
+> **Last updated:** 2026-04-30 (added `git diff` variants for skimming changes before commit)
 
 ---
 
@@ -54,6 +54,9 @@
 | When you want to... | Run... | Notes |
 |---|---|---|
 | See what's changed | `cd "/path/to/project" && git status` | Shows modified, staged, and untracked files |
+| See line-level changes (unstaged) | `git diff` | Walks you through every `+` (added) / `-` (removed) line in your modified files. Use to sanity-check before staging. |
+| See line-level changes (already staged) | `git diff --staged` | Same as above but for the changes currently queued for commit (e.g., from `git rm --cached`). |
+| Get a summary of what's changed | `git diff --stat` | One-line-per-file summary: filename + lines added/removed. Quicker than reading the full diff. |
 | Commit + push *(usually Claude does this)* | `git add . && git commit -m "..." && git push` | Or just say *"commit and push"* and Claude handles it |
 | See commit history | `git log --oneline -20` | Last 20 commits |
 | Test SSH auth to GitHub | `ssh -T git@github.com` | Should print *"Hi AshyG2025! ..."* |

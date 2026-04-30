@@ -37,10 +37,32 @@ _local/
 _drafts/
 scratch/
 
+# Processed-JD archive — keep local only.
+# Auto-maintained by scripts/score_jobs.py; useful for personal history but
+# would expose which JDs (incl. potentially the recipient's own) have been
+# scored if pushed to a public/portfolio repo.
+MANUAL_JDS_PROCESSED.md
+
+# Source-of-truth working copies — kept local only.
+# These are read by scripts/score_jobs.py at scoring time and contain
+# personal/strategic detail (named tier targets, comp expectations, file-pathed
+# resume routing). The committed public copies are *_PUBLIC.md, which carry
+# the framework / flagship metrics in anonymized form. Per CLAUDE.md Rule 7,
+# any framework change here must be reflected in the matching _PUBLIC.md file
+# in the same edit.
+COMPANY_LIST.md
+PROJECT_BRIEF.md
+
 # Personal experience artifacts — keep local only, never push to GitHub
 # (PROJECT_BRIEF.md captures the metrics needed by the agent in Ayesha's own words.
 #  Local Claude sessions can still read these files for resume/cover-letter work.)
 Product Experinces/
+
+# Tweaked-resume repository — local only.
+# Used by the asset-match step (Step 2) to give the matcher more candidate
+# starting points than just the two top-level base resumes. Contains
+# tailored resumes for past applications; not safe to push to a portfolio repo.
+Ayesha Resume/Resume to use repository/
 
 # Parallel manual workflow — not part of the job-scraping agent.
 # Lives in the project root for convenience only; never push.
