@@ -204,7 +204,9 @@ def build_digest(results: list[dict]) -> str:
             lines.append(f"- ⚠️ noise penalty applied: {r.get('noise_penalty_reason', '')}")
         if r.get("reason_short"):
             lines.append(f"- {r['reason_short']}")
-        if r.get("asset_match", {}).get("resume_choice"):
+        # asset_match is null (not missing) for roles scored < 7, so
+        # `.get("asset_match", {})` would return None, not {}. Use `or {}` instead.
+        if (r.get("asset_match") or {}).get("resume_choice"):
             lines.append(f"- Resume: `{r['asset_match']['resume_choice']}`")
         lines.append("")
     return "\n".join(lines)
