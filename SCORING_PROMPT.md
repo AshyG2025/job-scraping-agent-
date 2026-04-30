@@ -282,7 +282,7 @@ Two reasoning fields are **always present** so QC is possible on every score:
   "verdict": "prioritize",
 
   "noise_penalty_applied": false,
-  "noise_penalty_reason": "Posting is 4 days old (under 7-day threshold) — penalty does not trigger.",
+  "noise_penalty_reason": "Posting is 4 days old (under 7-day threshold) and has 32 applicants (under 100-applicant threshold) — penalty conditions not met.",
 
   "reason_short": "Multi-system ledger platform processing 2bn+ journal entries/month maps cleanly to her Mexico Tax Recon + Supplier Convergence work. Senior IC scope, technical-depth-required language, London (no visa filter).",
 
