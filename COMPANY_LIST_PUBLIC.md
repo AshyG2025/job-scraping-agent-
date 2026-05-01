@@ -56,6 +56,7 @@ Beyond the named-company scrape, the agent pulls from these **aggregator boards*
 ### Always-on aggregators
 - **LinkedIn** (via Apify) — title + geo + posting-age filters
 - **TrueUp** (truup.com) — Tech-focused aggregator, already part of my manual workflow
+- **Welcome to the Jungle** (welcometothejungle.com, formerly Otta) — Strong London / EU tech-PM coverage; scrape via Apify community actor
 
 ### Startup / VC-backed boards (covers growth-stage companies not on the named list)
 - **Y Combinator's Work at a Startup** (workatastartup.com) — YC portfolio companies, all stages; useful for catching YC growth-stage cos.

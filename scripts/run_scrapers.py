@@ -23,17 +23,62 @@ from pathlib import Path
 # Make scripts/ importable as a package when run as a script.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from scrapers import common, greenhouse, smartrecruiters
+from scrapers import common, greenhouse, smartrecruiters, workday
 
 # === SOURCES TO SCRAPE ===
+# Slugs verified against each company's live ATS board on 2026-05-01.
 SOURCES = [
-    {"company": "Stripe", "ats": "greenhouse",      "slug": "stripe"},
-    {"company": "Wise",   "ats": "smartrecruiters", "slug": "wise"},
+    # ---- Greenhouse ----
+    # Tier 1
+    {"company": "Adyen",      "ats": "greenhouse", "slug": "adyen"},
+    {"company": "Airbnb",     "ats": "greenhouse", "slug": "airbnb"},
+    {"company": "Bill.com",   "ats": "greenhouse", "slug": "billcom"},
+    {"company": "Boku",       "ats": "greenhouse", "slug": "boku"},
+    {"company": "Brex",       "ats": "greenhouse", "slug": "brex"},
+    {"company": "DoorDash",   "ats": "greenhouse", "slug": "doordashusa"},   # bare `doordash` 404s
+    {"company": "GoCardless", "ats": "greenhouse", "slug": "gocardless"},
+    {"company": "Liberis",    "ats": "greenhouse", "slug": "liberis"},
+    {"company": "Marqeta",    "ats": "greenhouse", "slug": "marqeta"},
+    {"company": "Mercury",    "ats": "greenhouse", "slug": "mercury"},
+    {"company": "Monzo",      "ats": "greenhouse", "slug": "monzo"},
+    {"company": "Stripe",     "ats": "greenhouse", "slug": "stripe"},
+    # Tier 2
+    {"company": "Affirm",     "ats": "greenhouse", "slug": "affirm"},
+    {"company": "Block",      "ats": "greenhouse", "slug": "block"},        # migrated off SmartRecruiters; ex-`Square` tenant is dormant
+    {"company": "Coinbase",   "ats": "greenhouse", "slug": "coinbase"},
+    {"company": "Databricks", "ats": "greenhouse", "slug": "databricks"},
+    {"company": "Modulr",     "ats": "greenhouse", "slug": "modulrfinance"},  # company is "Modulr"; legal name "Modulr Finance"
+    {"company": "Tide",       "ats": "greenhouse", "slug": "tide"},
+
+    # ---- SmartRecruiters (slugs are case-sensitive) ----
+    # Tier 1
+    {"company": "ServiceNow",   "ats": "smartrecruiters", "slug": "ServiceNow"},
+    {"company": "Wise",         "ats": "smartrecruiters", "slug": "wise"},
+
+    # ---- Workday (per-co config is tenant + host + site, not slug) ----
+    # Tier 1
+    {"company": "PayPal",       "ats": "workday", "tenant": "paypal",     "host": "wd1",  "site": "jobs"},
+    {"company": "Salesforce",   "ats": "workday", "tenant": "salesforce", "host": "wd12", "site": "External_Career_Site"},
+    {"company": "Visa",         "ats": "workday", "tenant": "visa",       "host": "wd5",  "site": "Visa"},
+    {"company": "Zillow",       "ats": "workday", "tenant": "zillow",     "host": "wd5",  "site": "Zillow_Group_External"},
+    # Tier 2
+    {"company": "Capital One",  "ats": "workday", "tenant": "capitalone", "host": "wd12", "site": "Capital_One"},
+    {"company": "Target",       "ats": "workday", "tenant": "target",     "host": "wd5",  "site": "targetcareers"},
+    {"company": "Walmart",      "ats": "workday", "tenant": "walmart",    "host": "wd5",  "site": "WalmartExternal"},
+    {"company": "Zoom",         "ats": "workday", "tenant": "zoom",       "host": "wd5",  "site": "Zoom"},
 ]
+
+# Pending new ATS modules (re-reconned 2026-05-01):
+#   - Deliveroo: now on Ashby, slug `deliveroo` (220 jobs verified). Adds when Ashby module ships.
+#
+# Note on Checkout.com: re-reconned to Workday (tenant `checkout`/site `CheckoutCareers`)
+# but tenant was in transient maintenance at recon. Add to the Workday block above
+# only after a live CXS-endpoint probe confirms it's serving.
 
 ATS_MODULES = {
     "greenhouse": greenhouse,
     "smartrecruiters": smartrecruiters,
+    "workday": workday,
 }
 
 MANUAL_JDS_PATH = Path(__file__).resolve().parents[1] / "MANUAL_JDS.md"
@@ -47,7 +92,7 @@ def main():
     for src in SOURCES:
         try:
             module = ATS_MODULES[src["ats"]]
-            listing = module.fetch_listing(src["slug"], src["company"])
+            listing = module.fetch_listing(src)
         except Exception as e:
             summary_lines.append(
                 f"❌ {src['company']} ({src['ats']}): fetch_listing failed — {e}"
@@ -65,7 +110,7 @@ def main():
         # Fetch JD body only for jobs that survived all filters AND are new.
         for job in unseen:
             try:
-                job["jd_html"] = module.fetch_jd_body(src["slug"], job)
+                job["jd_html"] = module.fetch_jd_body(src, job)
                 common.mark_seen(seen, job["url"])
                 new_entries.append(common.format_manual_jds_entry(job, job["_age_days"]))
             except Exception as e:

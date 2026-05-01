@@ -20,12 +20,13 @@ API_BASE = "https://api.smartrecruiters.com/v1/companies"
 PAGE_SIZE = 100   # API max per their docs
 
 
-def fetch_listing(company_slug: str, company_name: str) -> list[dict]:
+def fetch_listing(src: dict) -> list[dict]:
     """Returns all open jobs for the given SmartRecruiters company, paginated.
 
     Each item:
         {company, title, url, location, posted_at (ISO 8601), id, source_ats}
     """
+    company_slug = src["slug"]
     listing = []
     offset = 0
     while True:
@@ -46,7 +47,7 @@ def fetch_listing(company_slug: str, company_name: str) -> list[dict]:
                 f"{location.get('city', '')}, {location.get('country', '').upper()}"
             ).strip(", ")
             listing.append({
-                "company": company_name,
+                "company": src["company"],
                 "title": posting.get("name", ""),
                 "url": f"https://jobs.smartrecruiters.com/{company_slug}/{posting['id']}",
                 "location": location_str,
@@ -61,10 +62,10 @@ def fetch_listing(company_slug: str, company_name: str) -> list[dict]:
     return listing
 
 
-def fetch_jd_body(company_slug: str, job: dict) -> str:
+def fetch_jd_body(src: dict, job: dict) -> str:
     """Returns the full JD body for a single job by concatenating its sections."""
     response = requests.get(
-        f"{API_BASE}/{company_slug}/postings/{job['id']}",
+        f"{API_BASE}/{src['slug']}/postings/{job['id']}",
         headers={"User-Agent": USER_AGENT},
         timeout=REQUEST_TIMEOUT_SEC,
     )

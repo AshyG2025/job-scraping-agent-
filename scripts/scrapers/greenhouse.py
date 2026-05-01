@@ -2,13 +2,13 @@
 What this file does — fetches jobs from a Greenhouse-hosted careers page using
 the public no-auth API at boards-api.greenhouse.io. Two functions:
 
-- fetch_listing(slug, company_name): returns all open jobs (no JD body) as
-  normalized dicts that the orchestrator can filter.
-- fetch_jd_body(slug, job): given a job dict from fetch_listing, returns the
+- fetch_listing(src): returns all open jobs (no JD body) as normalized dicts
+  that the orchestrator can filter. `src` is the source-dict from SOURCES.
+- fetch_jd_body(src, job): given a job dict from fetch_listing, returns the
   full JD body as HTML.
 
-Used for Stripe in Phase B. Many companies use Greenhouse — adding a new one
-is one line in run_scrapers.py.
+Used for many Tier 1 + Tier 2 companies in Phase B. Adding a new one is one
+line in run_scrapers.py.
 
 API docs: https://developers.greenhouse.io/job-board.html
 """
@@ -20,14 +20,14 @@ from .common import REQUEST_TIMEOUT_SEC, USER_AGENT
 API_BASE = "https://boards-api.greenhouse.io/v1/boards"
 
 
-def fetch_listing(board_slug: str, company_name: str) -> list[dict]:
+def fetch_listing(src: dict) -> list[dict]:
     """Returns all open jobs for the given Greenhouse board, without JD body.
 
     Each item:
         {company, title, url, location, posted_at (ISO 8601), id, source_ats}
     """
     response = requests.get(
-        f"{API_BASE}/{board_slug}/jobs",
+        f"{API_BASE}/{src['slug']}/jobs",
         headers={"User-Agent": USER_AGENT},
         timeout=REQUEST_TIMEOUT_SEC,
     )
@@ -35,7 +35,7 @@ def fetch_listing(board_slug: str, company_name: str) -> list[dict]:
     payload = response.json()
     return [
         {
-            "company": company_name,
+            "company": src["company"],
             "title": job.get("title", ""),
             "url": job.get("absolute_url", ""),
             "location": (job.get("location") or {}).get("name", ""),
@@ -47,10 +47,10 @@ def fetch_listing(board_slug: str, company_name: str) -> list[dict]:
     ]
 
 
-def fetch_jd_body(board_slug: str, job: dict) -> str:
+def fetch_jd_body(src: dict, job: dict) -> str:
     """Returns the full JD body (HTML) for a single job from fetch_listing()."""
     response = requests.get(
-        f"{API_BASE}/{board_slug}/jobs/{job['id']}",
+        f"{API_BASE}/{src['slug']}/jobs/{job['id']}",
         headers={"User-Agent": USER_AGENT},
         timeout=REQUEST_TIMEOUT_SEC,
     )

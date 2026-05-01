@@ -7,7 +7,7 @@
 > - **Section 2 (Each file & folder explained)** — deeper reference. What each file does, how to use it, and concrete use cases.
 > - **Section 3 (When to consult this TOC)** — meta — when to open this file in the first place.
 >
-> **Last updated:** 2026-04-30 (Phase B shipped: added `scripts/run_scrapers.py` orchestrator + `scripts/scrapers/` package with `common.py`, `greenhouse.py`, `smartrecruiters.py`; QC_PROCESS gains a 30-sec scraper-volume sanity check; requirements.txt adds `requests`. Earlier same day: portfolio prep — gitignored `MANUAL_JDS_PROCESSED.md`, `Ayesha Resume/Resume to use repository/`, `COMPANY_LIST.md`, `PROJECT_BRIEF.md` as local-only working copies; added committed `*_PUBLIC.md` framework copies; added CLAUDE.md Rule 7; refreshed README Status + added platform-PM-lens framing subsection)
+> **Last updated:** 2026-05-01 (Session 2.1.3: Workday module shipped at `scripts/scrapers/workday.py` covering 8 tenants — Visa, PayPal, Salesforce, Zillow, Target, Capital One, Walmart, Zoom. Module contract refactored: `fetch_listing` / `fetch_jd_body` take the full source dict instead of `(slug, company_name)`. SOURCES bulk-expanded to 28 named-co scrapers — Tier 1 + Tier 2 ATS recon + Boku added to COMPANY_LIST.md Tier 1 UK/London. Welcome to the Jungle added to discovery aggregators. Earlier 2026-04-30: Phase B shipped: `scripts/run_scrapers.py` orchestrator + `scripts/scrapers/` package with `common.py`, `greenhouse.py`, `smartrecruiters.py`; QC_PROCESS gains a 30-sec scraper-volume sanity check; requirements.txt adds `requests`. Same day: portfolio prep — gitignored `MANUAL_JDS_PROCESSED.md`, `Ayesha Resume/Resume to use repository/`, `COMPANY_LIST.md`, `PROJECT_BRIEF.md` as local-only working copies; added committed `*_PUBLIC.md` framework copies; added CLAUDE.md Rule 7; refreshed README Status + added platform-PM-lens framing subsection)
 
 ---
 
@@ -191,8 +191,9 @@ The most common workflows you'll do, and exactly where to go.
 #### `scripts/scrapers/` *(per-ATS scraper package)*
 - **What it is:** Modular per-ATS fetchers. Each module exposes the same two functions (`fetch_listing(slug, company_name)`, `fetch_jd_body(slug, job)`) so the orchestrator stays generic.
   - `common.py` — shared helpers: title/geo/age filter regexes (mirror of `HARD_FILTERS.md`, in a TUNABLE PARAMETERS block at the top of the file), HTML→text cleanup, dedup cache I/O, MANUAL_JDS.md entry formatting.
-  - `greenhouse.py` — fetches jobs from Greenhouse-hosted careers pages via `boards-api.greenhouse.io` (no auth). Used for Stripe; works for many other employers (Plaid, Brex, Coinbase, etc.) by changing the slug.
-  - `smartrecruiters.py` — fetches jobs from SmartRecruiters-hosted careers pages via `api.smartrecruiters.com` (no auth, paginated list). Used for Wise; works for other SmartRecruiters customers.
+  - `greenhouse.py` — fetches jobs from Greenhouse-hosted careers pages via `boards-api.greenhouse.io` (no auth). Used for ~18 Tier 1 + Tier 2 cos (Stripe, Adyen, Airbnb, Bill.com, Boku, Brex, DoorDash, GoCardless, Liberis, Marqeta, Mercury, Monzo, Affirm, Block, Coinbase, Databricks, Modulr, Tide).
+  - `smartrecruiters.py` — fetches jobs from SmartRecruiters-hosted careers pages via `api.smartrecruiters.com` (no auth, paginated list). Used for Wise + ServiceNow.
+  - `workday.py` — fetches jobs from Workday-hosted careers pages via the public CXS JSON endpoint (no auth, paginated list, POST). Used for ~8 Tier 1 + Tier 2 cos (Visa, PayPal, Salesforce, Zillow, Target, Capital One, Walmart, Zoom). Per-company config is `(tenant, host, site)` triple, not a single slug — Workday tenants live on different `wd1..wd103` cloud hosts.
 - **How to use it:** Don't run modules directly — `run_scrapers.py` orchestrates them.
 - **When to edit:**
   - Filter regex changes → edit `common.py` TUNABLE PARAMETERS block, then mirror the change to `HARD_FILTERS.md` to keep the spec in sync.
