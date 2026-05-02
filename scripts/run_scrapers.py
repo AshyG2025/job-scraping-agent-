@@ -23,7 +23,7 @@ from pathlib import Path
 # Make scripts/ importable as a package when run as a script.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from scrapers import common, greenhouse, smartrecruiters, workday
+from scrapers import ashby, common, greenhouse, smartrecruiters, workday
 
 # === SOURCES TO SCRAPE ===
 # Slugs verified against each company's live ATS board on 2026-05-01.
@@ -66,11 +66,13 @@ SOURCES = [
     {"company": "Target",       "ats": "workday", "tenant": "target",     "host": "wd5",  "site": "targetcareers"},
     {"company": "Walmart",      "ats": "workday", "tenant": "walmart",    "host": "wd5",  "site": "WalmartExternal"},
     {"company": "Zoom",         "ats": "workday", "tenant": "zoom",       "host": "wd5",  "site": "Zoom"},
+
+    # ---- Ashby ----
+    # Tier 1
+    {"company": "Deliveroo",    "ats": "ashby", "slug": "deliveroo"},     # migrated off Greenhouse 2026-05-01
+    {"company": "Ramp",         "ats": "ashby", "slug": "ramp"},
 ]
 
-# Pending new ATS modules (re-reconned 2026-05-01):
-#   - Deliveroo: now on Ashby, slug `deliveroo` (220 jobs verified). Adds when Ashby module ships.
-#
 # Note on Checkout.com: re-reconned to Workday (tenant `checkout`/site `CheckoutCareers`)
 # but tenant was in transient maintenance at recon. Add to the Workday block above
 # only after a live CXS-endpoint probe confirms it's serving.
@@ -79,6 +81,7 @@ ATS_MODULES = {
     "greenhouse": greenhouse,
     "smartrecruiters": smartrecruiters,
     "workday": workday,
+    "ashby": ashby,
 }
 
 MANUAL_JDS_PATH = Path(__file__).resolve().parents[1] / "MANUAL_JDS.md"

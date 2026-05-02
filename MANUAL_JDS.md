@@ -868,3 +868,58 @@ This position will be performed in an office setting. The position will require 
 Visa is an EEO Employer
 Qualified applicants will receive consideration for employment without regard to race, color religion, sex, national origin, sexual orientation, gender identity, disability or protect veteran status.  Visa will also consider for employment qualified applicants with criminal histories in a manner consistent with the EEOC guidelines and applicable local law, including the requirements of Article 49 of the San Francisco Police Code.
 ---
+
+<!-- Added by run_scrapers.py — review/edit before running score_jobs.py -->
+
+## Deliveroo — Staff Product Manager, Ads
+**URL:** https://jobs.ashbyhq.com/deliveroo/528b7b55-628f-4748-9726-fe3797be01a8
+**Posted:** 3 days ago
+**Source:** ashby (auto-scraped)
+
+---
+Join us in our mission to transform the way people shop and eat, where impact, innovation, and growth drive everything we do. As part of our unified global ads organization across Deliveroo and Wolt (DoorDash International), our Product team defines how millions of people experience the marketplace, turning complex logistics and advertising challenges into simple, high-impact solutions.
+Working at the intersection of data, design, and engineering, we set the direction for the world's leading merchant-funded marketing engine. You will lead outcomes that scale our ads and promotions business while protecting marketplace integrity and the consumer experience.
+We’re looking for a Staff Product Manager to join our London team. In this role, you’ll drive key pillars of our global strategy, leading initiatives to drive growth for our merchant and brand advertiser audiences.
+What You’ll Be Doing
+You’ll be joining a high-velocity team working on DoorDash International’s most critical growth levers. You will collaborate with Engineering, Data Science, and global GTM teams to build a unified retail media platform that serves our three-sided marketplace.
+Here’s what your day-to-day might look like:
+• Set the overall strategy for the next set of growth products that we’ll build for our global audience of merchants and brands.
+
+• Optimizing ad supply and relevance through improved ranking algorithms and inventory designs.
+
+• Building a path towards a global technology stack, so product innovations reach all markets instantly.
+
+• Running experiments to gather data, understand customer outcomes, and measure the impact of your bets.
+
+• Talking with customers to understand their needs and plan the next series of strategic investments we’ll make to drive their success
+
+What You’ll Need to Thrive
+Our ideal candidate will bring strong expertise in some of these areas and curiosity to grow in others:
+• Proven experience as a Product Manager with experience from the B2B/B2C and/or Adtech and Martech space  -  you know what it takes to develop great products
+
+• Significant experience being data-savvy and analytical; you can grasp technical concepts quickly and partner effectively with Machine Learning and Operations Research specialists.
+
+• A systems-thinking mindset, with the ability to balance customer needs with commercial goals while considering second and third-order effects on the marketplace.
+
+• Demonstrated ownership of high-velocity execution, maintaining a sharp eye for detail in an environment where impact is paramount.
+
+• Resilience to thrive in a high-ownership environment where you are empowered to make formal ship decisions.
+
+Why Join Us?
+At Deliveroo, you’ll do work that matters, solving real-world problems in a three-sided marketplace that’s constantly evolving.
+We’re food lovers, problem solvers, community builders and more, brought together by a shared drive to make things better. Working here you can expect to:
+🔧 Solve meaningful problems at real scale Work on a complex, always-on marketplace that impacts millions every day.
+🌱 See your impact, fast Ship, test and improve ideas quickly in a low-hierarchy, high-ownership environment.
+🧠 Grow through challenge and ownership Take on big, ambiguous problems and accelerate your career with strong support.
+🌎 A culture built for builders High standards, collaboration, flexible working and continuous learning.
+💰 Share in the success you help create Competitive salary and equity options, so you’re rewarded for the impact you make.
+➡️ Want a deeper look at how we build? Check out our Tech Blog.
+We aim to create a fair process that lets your skills shine—our interview typically includes 3-4 stages. Find more about how we hire here.
+Our Global Structure
+Deliveroo is now part of DoorDash, bringing together teams with even greater reach, scale, and ambition. Depending on your role, you may collaborate with teammates, systems, and leaders across DoorDash and Wolt. Together, we’re unlocking new possibilities as one global team.
+Diversity, Equity and Inclusion
+At Deliveroo, we know that a great workplace reflects the world around us and that true diversity and inclusion make us stronger, more creative, and better at what we do. We’re committed to fostering an environment where everyone can do their best work and feel they belong.
+We believe in equality of opportunity and welcome candidates from all backgrounds regardless of age, gender, ethnicity, disability, sexual orientation, gender identity, socio-economic background, religion, or belief.
+If you have a disability or long-term health condition and need support to apply for one of our roles, or if you require any reasonable adjustments during the recruitment process, please contact our recruitment team at accommodations@deliveroo.co.uk and we’ll be happy to help ensure you have a fair and equitable experience.
+If you’re excited about making a real impact in a fast-moving marketplace and growing your career alongside ambitious, supportive teams, we’d love to hear from you!
+---
