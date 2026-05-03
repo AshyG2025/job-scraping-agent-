@@ -6,7 +6,7 @@
 >
 > **Sync rule:** Per `CLAUDE.md` Rule 7, framework changes to the local working copy (role brief, great-match / weak-match criteria, geography rules, flagship metrics, resume-selection routing logic) must be reflected here in the same edit. Adding / removing specific companies in target lists, editing the comp section, or adjusting Referral Network does not propagate.
 >
-> **Last updated:** 2026-04-30 (initial public copy — genericized from local source)
+> **Last updated:** 2026-05-02 (Session 2.2: added "Problem-shape framings" sub-block to each of the 4 flagships — 6–8 illustrative framings per flagship that describe the same underlying work in different domain vocabularies, so the matcher can recognize situational matches even when JDs use unfamiliar terms. Companion change in `SCORING_PROMPT.md` v1.1 adds the prompt-side guardrail. Earlier 2026-04-30: initial public copy — genericized from local source.)
 
 ---
 
@@ -86,15 +86,43 @@ I'm also **open to companies not on the named list** if a Senior Platform PM rol
    - **Total cost discovered during initial project discovery: $20M** (the cost-savings opportunity that justified the program)
    - **Revenue impact at 12–18 months post-launch: up to $17M generated through suppliers due to platform convergence**
 
+   **Problem-shape framings (illustrative, not exhaustive — for situational matching when JDs describe the same underlying work in different domain vocabulary):**
+   1. *Consolidate multiple legacy systems (5+) into a unified platform without disrupting live external partners (1,000+)*
+   2. *Productize reusable platform capabilities (APIs, services, data contracts) for internal teams with explicit governance + adoption mechanisms*
+   3. *Sequence a multi-year platform migration so the business keeps shipping while the infrastructure improves underneath*
+   4. *Design a layered abstraction architecture (presentation / transformation / data) that decouples upstream complexity from downstream API consumers*
+   5. *Build the data-model bridge between an internal source-of-truth and external partner vocabularies, so both can operate on shared truth without per-partner one-off integrations*
+   6. *Drive 0 → 80%+ adoption of a new internal platform across 15+ teams without top-down mandate*
+   7. *Design identifier-translation logic (ID-mapping) that lets systems with different native identifier schemes reconcile without manual intervention*
+   8. *Ship the API contracts that became the integration foundation for an external partner ecosystem (1,000+ partners onboarding 8w → 7d)*
+
 2. **Mexico Tax Reconciliation Automation Platform** (lead for: data / operations / FinTech platform roles)
    - Multi-system integration: Amazon payment systems + Mexican government tax portal
    - 36-attribute data architecture, 72% → 89% accuracy, $1.8M annual savings
    - Eliminated 90-person manual process
 
+   **Problem-shape framings (illustrative, not exhaustive):**
+   1. *Build multi-system reconciliation between an internal source-of-truth and an external regulated counterparty (e.g., a government tax authority) where the counterparty defines the schema you must conform to*
+   2. *Define a multi-attribute data architecture (36+ attributes) that maps disparate schemas onto a common canonical model*
+   3. *Move accuracy from a low baseline (~70%) to a compliance-grade threshold (~90%) via controls and validation framework — through better data architecture, not more headcount*
+   4. *Replace a labor-intensive manual ops workflow (90+ FTEs reading + reconciling) with an automated platform — eliminate the people-as-API pattern*
+   5. *Build the data-integrity layer that lets two systems with no native interoperability operate on shared truth, with audit trails for compliance*
+   6. *Lead a regulated-data product where the external counterparty defines the schema you must conform to, with no negotiation power*
+   7. *Design the reconciliation pipeline that surfaces discrepancies before they become compliance violations*
+
 3. **AI Invoice Automation Platform** (lead for: AI/ML / automation / process platform roles)
    - OCR + ML platform processing 3M+ invoices/year
    - Template-based architecture (3.5M invoices → 80 formats → 25 pilot templates)
    - 80%+ accuracy vs. 75% manual baseline; scaled 5 → 320 suppliers; $2M savings; 92% processing-time reduction
+
+   **Problem-shape framings (illustrative, not exhaustive):**
+   1. *Replace a manual / vendor-based classification process with an in-house ML system, in production, without disrupting live business operations*
+   2. *Design a template-based architecture that compresses massive variation (millions of inputs) into a manageable taxonomy (tens of templates) — engineering investment in templating + structure, not in novel modeling*
+   3. *Scale a niche pilot to broad production deployment (5 → 320 suppliers) while maintaining quality bar (80%+ accuracy vs. 75% manual baseline)*
+   4. *Build the ML platform that beats the manual baseline on the metric that matters — accuracy at scale, not just throughput*
+   5. *Compress process time by orders of magnitude (days → hours, 92% reduction) via OCR + ML integration*
+   6. *Define the data-extraction architecture for unstructured input (invoices, semi-structured documents) at scale (3M+ documents/year)*
+   7. *Lead the AI/ML productization where the engineering investment is in structure + templating rather than in novel modeling — pragmatic AI, not research AI*
 
 4. **Global E-Invoicing Platform Framework / FinAuto** (lead for: invoicing / billing / e-invoicing / tax-compliance / multi-country product launch / regulatory product roles)
 
@@ -113,6 +141,16 @@ I'm also **open to companies not on the named list** if a Senior Platform PM rol
    - **$25–30M annual reduction in vendor overpayments** across deployed markets
    - **7 pre-configured solutions (RS1–RS7) adopted by 15+ countries**
    - **Reduced new-country launch effort from 20+ engineering weeks to under 10 engineering weeks** (Blueprint set this as the design-phase target; achieved post-launch)
+
+   **Problem-shape framings (illustrative, not exhaustive):**
+   1. *Define the reference framework that disparate cross-org teams adopt as the shared standard — not a recommendation, a load-bearing standard*
+   2. *Author governance + intake-gate mechanisms (steering committee + framework evaluation gate at each new project intake) that scale a framework across many markets without per-instance redesign*
+   3. *Compress per-deployment effort (engineering weeks → fraction; 20+ → <10 weeks per country launch) by pre-defining solution patterns*
+   4. *Lead the regulatory / compliance product framework that bridges multiple jurisdictions' divergent requirements (open vs. closed clearance models, government-API availability, etc.)*
+   5. *Define the cross-functional product taxonomy (4 functional domains × 27 cataloged features) that becomes the org's shared vocabulary for the problem space*
+   6. *Author the multi-country product launch playbook where each country's deployment is parameterization of an existing framework, not greenfield design*
+   7. *Drive cross-org PM collaboration (5+ partner orgs, 12 working sessions over 3 months) to land a single framework all parties adopt*
+   8. *Build the steering-committee + evaluation-gate machinery that keeps a platform framework load-bearing over time*
 
 ---
 

@@ -6,8 +6,8 @@
 >
 > **Adapted from:** `Job Posting samples/Platform PM Role ANALYZER - Instructions.docx` (Ayesha's existing analyzer prompt, condensed and given a structured output format).
 >
-> **Prompt version:** `v1.0` (initial draft, untested) — bump on every meaningful change; record what changed in the **Iteration log** at the bottom.
-> **Last updated:** 2026-04-27
+> **Prompt version:** `v1.1` — bump on every meaningful change; record what changed in the **Iteration log** at the bottom.
+> **Last updated:** 2026-05-02
 
 ---
 
@@ -132,9 +132,12 @@ Map the JD's required competencies to Ayesha's flagship project evidence.
 10. Platform metrics & health monitoring
 
 **Ayesha's flagship evidence (do not paraphrase or expand beyond what's documented in `PROJECT_BRIEF.md`):**
-- WFM Vendor Central Convergence (integration platform, 5→1 systems, 1,000+ users, 3 APIs, $9.6M)
+- WFM Vendor Central Convergence (integration platform, 5→1 systems, 1,000+ users, 3 APIs, $20M cost / $17M revenue at 12–18mo)
 - Mexico Tax Reconciliation (multi-system data integration, 36 attributes, 72→89% accuracy, $1.8M)
 - AI Invoice Automation (template-based ML platform, 80%+ accuracy, $2M, 92% time reduction)
+- Global E-Invoicing Platform Framework / FinAuto (7 RS patterns, 27 features, 4 domains, 15+ country adoption, 20+→<10 eng weeks per country launch)
+
+**Recognizing situational matches in skills:** A flagship's skills evidence isn't limited to literal keyword presence. Each flagship in `PROJECT_BRIEF.md` has a **"Problem-shape framings"** sub-block — 6–8 illustrative ways the same project can be described in different domain vocabularies. Use these to recognize when a JD's skill ask describes the same problem-shape in unfamiliar language. **Guardrails are in the "Situational matching" section after Dimension 4** — read that before crediting any situational match.
 
 **Score this dimension:**
 - **9–10**: 5+ JD-required competencies have direct strong-match evidence in flagship projects
@@ -174,12 +177,32 @@ Based on the JD (and any company context), what does this team actually need *ri
 - **Manageable**: Adjacent domain with transferable thinking; scale gap with architectural-design evidence; technical depth slightly deeper but learnable
 - **Dealbreaker**: Wrong platform domain with no transferable thinking; level mismatch by 2+; missing critical experience the team explicitly states they need on Day 1
 
+**Recognizing situational matches in team needs:** Use the **"Problem-shape framings"** sub-block under each flagship in `PROJECT_BRIEF.md` to recognize when a team's stated needs describe the same problem-shape that a flagship project solved, in different domain vocabulary. (E.g., a healthcare-payer team asking for *"claims reconciliation between provider EHRs and payer adjudication systems with audit-grade controls"* describes the same shape as Mexico Tax Reconciliation framings #1 + #6 + #7, even though *"tax,"* *"Mexico,"* and *"Amazon"* never appear.) **Guardrails are in the "Situational matching" section directly below.**
+
 **Score this dimension:**
 - **9–10**: Team's stated needs match her flagship stories almost 1:1; no dealbreaker gaps
 - **7–8**: 2–3 needs are direct hits; 1–2 manageable gaps
 - **5–6**: Significant addressable gaps; cover letter would need to do real work
 - **3–4**: Dealbreaker gap exists; unlikely to clear bar even with strong positioning
 - **1–2**: Clear mismatch on what team needs
+
+---
+
+## Situational matching — read the problem-shape, not just the keywords
+
+Each flagship in `PROJECT_BRIEF.md` has a **"Problem-shape framings"** sub-block — 6–8 illustrative ways the same project can be described in different domain vocabularies. These are *exemplars*, not an exhaustive catalog. Use them to score Dimensions 2 (Skills) and 4 (Team Needs) when a JD describes the same underlying work in unfamiliar vocabulary.
+
+**What this is for:**
+- Recognizing matches that pure lexical keyword-matching would miss. A JD that asks for *"sequence migrations so the platform improves underneath while the business keeps shipping"* and a JD that asks for *"manage zero-downtime cutover across multiple legacy services"* describe the **same problem-shape** as WFM Convergence framing #3 — even with different domain words.
+
+**What this is NOT for — explicit guardrails so framings don't over-index the matcher's capabilities:**
+
+1. **Don't over-extrapolate.** A framing is a recognition handle, not a license to claim every adjacent shape. If a JD describes a problem-shape that *partially* matches a framing (the platform is bigger or smaller in scope, the stakeholder mix is different, the regulatory context is different), score the **partial** match, not the full one. The concrete numbers / scope inside each framing (e.g., "5+ legacy systems," "1,000+ partners," "36+ attributes") are there to keep the framing tight — a JD that doesn't describe that scale isn't a match for that framing.
+2. **Don't inflate dimension scores.** The 4-dimension rubric still governs scoring. A strong situational match in Skills (Dimension 2) doesn't auto-elevate Domain (Dimension 1) — those are independent dimensions and only the relevant one moves. Recognizing a situational match adds **confidence** to a dimension score; it doesn't add **points** beyond what the rubric warrants.
+3. **Don't replace lexical evidence — augment it.** When a JD has both clear keyword overlap and a clear situational shape, the situational match adds confidence; when neither matches well, no situational match exists. When in doubt, fall back to literal lexical matching + flagship-metric evidence.
+4. **Authenticity guardrail (per `CLAUDE.md` Rule 3):** A situational match must describe **what Ayesha actually did**, not what a JD wishes she'd done. If a framing extrapolation requires claiming experience she doesn't have (e.g., "consumer auth UX" or "agentic AI productization"), it's not a valid situational match — score the gap, don't paper over it.
+
+**How to cite a situational match in `reasoning_trace`:** Name the specific framing(s) that fired (e.g., *"situational match: WFM framing #3 — sequence migration without disrupting live partners; Mexico framing #6 — regulated-data product where external party defines the schema"*). This makes the matcher's reasoning auditable and lets us tighten any framing that turns out to fire too generously.
 
 ---
 
@@ -263,7 +286,7 @@ Two reasoning fields are **always present** so QC is possible on every score:
 
 ```json
 {
-  "prompt_version": "v1.0",
+  "prompt_version": "v1.1",
 
   "company": "Wise",
   "title": "Senior Product Manager — Treasury Ledger Platform",
@@ -419,7 +442,7 @@ Track every meaningful change to this prompt here. Bump `prompt_version` in the 
 | Version | Date | Change | Why | Eval-set impact |
 |---|---|---|---|---|
 | `v1.0` | 2026-04-27 | Initial draft adapted from Platform PM Role Analyzer doc | Bootstrap | Untested against eval set yet — Session 2 first run will validate |
-| | | | | |
+| `v1.1` | 2026-05-02 | Added "Situational matching — read the problem-shape, not just the keywords" section after Dimension 4. Added one-paragraph mention in Dimensions 2 (Skills) + 4 (Team Needs) pointing to the new section. Companion change in `PROJECT_BRIEF.md`: each of the 4 flagships now has a "Problem-shape framings" sub-block (6–8 illustrative framings per flagship). Added 4th flagship (FinAuto E-Invoicing Blueprint) to the abbreviated flagship-evidence list under Dimension 2. Refreshed WFM canonical numbers ($9.6M → $20M cost / $17M revenue). | Session 2.2 — minor version (definition / wording change; should not move scores by >1). Calibration validated against Liberis (target 8, scored 9 under v1.0), Wise Treasury (target 9), PayPal R0136354 (v1.0 baseline 8), Salesforce MuleSoft (v1.0 baseline 8) — see Session 2.2 commit. |
 
 **Convention:**
 - Bump minor version (`v1.0 → v1.1`) for definition / wording changes that shouldn't change scores by > 1
