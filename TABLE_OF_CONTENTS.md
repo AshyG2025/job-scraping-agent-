@@ -7,7 +7,7 @@
 > - **Section 2 (Each file & folder explained)** — deeper reference. What each file does, how to use it, and concrete use cases.
 > - **Section 3 (When to consult this TOC)** — meta — when to open this file in the first place.
 >
-> **Last updated:** 2026-05-02 (Session 2.1.4: Ashby module shipped at `scripts/scrapers/ashby.py` covering Ramp + Deliveroo (Tier 1). SOURCES now 30 named-co scrapers (28 → 30). Ashby's listing endpoint inlines `descriptionHtml`, so `fetch_jd_body()` returns a cached value — no second HTTP round-trip per job. First live run: 1 net-new JD (Deliveroo Staff PM, Ads, London). Earlier 2026-05-01: Session 2.1.3: Workday module at `scripts/scrapers/workday.py` covering 8 tenants — Visa, PayPal, Salesforce, Zillow, Target, Capital One, Walmart, Zoom. Module contract refactored: `fetch_listing` / `fetch_jd_body` take the full source dict instead of `(slug, company_name)`. SOURCES bulk-expanded to 28 named-co scrapers — Tier 1 + Tier 2 ATS recon + Boku added to COMPANY_LIST.md Tier 1 UK/London. Welcome to the Jungle added to discovery aggregators. Earlier 2026-04-30: Phase B shipped: `scripts/run_scrapers.py` orchestrator + `scripts/scrapers/` package with `common.py`, `greenhouse.py`, `smartrecruiters.py`; QC_PROCESS gains a 30-sec scraper-volume sanity check; requirements.txt adds `requests`. Same day: portfolio prep — gitignored `MANUAL_JDS_PROCESSED.md`, `Ayesha Resume/Resume to use repository/`, `COMPANY_LIST.md`, `PROJECT_BRIEF.md` as local-only working copies; added committed `*_PUBLIC.md` framework copies; added CLAUDE.md Rule 7; refreshed README Status + added platform-PM-lens framing subsection)
+> **Last updated:** 2026-05-02 (Session 2.2.1: extracted 6 eval-set JD bodies from `Job Posting samples/JD mapping to my exp..docx` into `docs/EVAL_SET_JDS.md` — calibration is now runnable end-to-end via `cat docs/EVAL_SET_JDS.md >> MANUAL_JDS.md && python scripts/score_jobs.py`, no longer dependent on original postings still being live. Earlier 2026-05-02 (Session 2.2): added "Problem-shape framings" sub-block to each of the 4 flagships in `PROJECT_BRIEF.md` + `_PUBLIC.md` (30 framings total); `SCORING_PROMPT.md` v1.0 → v1.1 with new "Situational matching — read the problem-shape, not just the keywords" section + 4 explicit guardrails. Calibration: Liberis 9, Wise Treasury 9, PayPal 8, Salesforce MuleSoft 7 (-1 from v1.0; guardrail working). Earlier Session 2.1.4: Ashby module shipped at `scripts/scrapers/ashby.py` covering Ramp + Deliveroo (Tier 1). SOURCES now 30 named-co scrapers (28 → 30). Ashby's listing endpoint inlines `descriptionHtml`, so `fetch_jd_body()` returns a cached value — no second HTTP round-trip per job. First live run: 1 net-new JD (Deliveroo Staff PM, Ads, London). Earlier 2026-05-01: Session 2.1.3: Workday module at `scripts/scrapers/workday.py` covering 8 tenants — Visa, PayPal, Salesforce, Zillow, Target, Capital One, Walmart, Zoom. Module contract refactored: `fetch_listing` / `fetch_jd_body` take the full source dict instead of `(slug, company_name)`. SOURCES bulk-expanded to 28 named-co scrapers — Tier 1 + Tier 2 ATS recon + Boku added to COMPANY_LIST.md Tier 1 UK/London. Welcome to the Jungle added to discovery aggregators. Earlier 2026-04-30: Phase B shipped: `scripts/run_scrapers.py` orchestrator + `scripts/scrapers/` package with `common.py`, `greenhouse.py`, `smartrecruiters.py`; QC_PROCESS gains a 30-sec scraper-volume sanity check; requirements.txt adds `requests`. Same day: portfolio prep — gitignored `MANUAL_JDS_PROCESSED.md`, `Ayesha Resume/Resume to use repository/`, `COMPANY_LIST.md`, `PROJECT_BRIEF.md` as local-only working copies; added committed `*_PUBLIC.md` framework copies; added CLAUDE.md Rule 7; refreshed README Status + added platform-PM-lens framing subsection)
 
 ---
 
@@ -237,12 +237,21 @@ The most common workflows you'll do, and exactly where to go.
 ### `docs/` folder
 
 #### `docs/EVAL_SET.md`
-- **What it is:** 6 manually-labeled gold-standard postings + their target scores. The test fixture for every prompt change.
+- **What it is:** 6 manually-labeled gold-standard postings + their target scores + per-dimension reasoning. The test fixture for every prompt change. **JD bodies live in the companion file `docs/EVAL_SET_JDS.md`** — `EVAL_SET.md` holds only the targets and the why; the JD text is split out so it can be fed to the scorer.
 - **How to use it:** Reference when validating a prompt change. Append outcome-validated examples each month.
 - **Use cases:**
-  - You changed the prompt → re-run all 6 and confirm scores within ±1 of target
-  - You applied to a role + got rejected at score 8 → consider adding it as a labeled "should have been a 5" example
+  - You changed the prompt → run `cat docs/EVAL_SET_JDS.md >> MANUAL_JDS.md && python scripts/score_jobs.py`, then compare against the 6 targets here. Confirm scores within ±1.
+  - You applied to a role + got rejected at score 8 → consider adding it as a labeled "should have been a 5" example (add the entry here AND the JD body to `docs/EVAL_SET_JDS.md`).
 - **When to edit:** Every monthly QC (1–2 new examples typically); after any prompt version bump (record actual scores)
+
+#### `docs/EVAL_SET_JDS.md`
+- **What it is:** The 6 JD bodies backing `EVAL_SET.md`'s gold-standard targets, formatted for the scorer to read. Extracted from `Job Posting samples/JD mapping to my exp..docx` (Session 2.2.1) so calibration doesn't break when original postings come down off live ATS boards.
+- **How to use it:** When re-running the eval set for prompt validation or monthly QC: `cat docs/EVAL_SET_JDS.md >> MANUAL_JDS.md && python scripts/score_jobs.py`. Cost: ~$0.72 per full eval run (6 entries × ~$0.12).
+- **Use cases:**
+  - Before shipping a `SCORING_PROMPT.md` version bump — re-run and confirm no role drifts > 1 point
+  - First-of-month QC ritual — eval set is one of the auto-runs
+  - After-action: you applied to a role at score 8 and got rejected → add as eval set entry #7 (here + in `EVAL_SET.md`)
+- **When to edit:** Whenever you add a new gold-set entry; never edit existing JD bodies (they're frozen snapshots — changing the body would invalidate the historical target).
 
 #### `docs/CALIBRATION_DEEP_DIVE.md`
 - **What it is:** The 6-phase, 60–90 min playbook for fixing inverted calibration. Only opened when QC fires the 🚨 alert.

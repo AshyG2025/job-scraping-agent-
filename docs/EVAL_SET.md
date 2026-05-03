@@ -4,7 +4,9 @@
 >
 > **Source:** Adapted from `Job Posting samples/JD mapping to my exp..docx` (Ayesha's manually labeled set).
 >
-> **Last updated:** 2026-04-27
+> **JD bodies live in `docs/EVAL_SET_JDS.md`** — paste those into `MANUAL_JDS.md` and run `python scripts/score_jobs.py` to re-run the eval set. This file (`EVAL_SET.md`) holds only the targets + reasoning; the actual JD text is in the companion file so calibration stays runnable even after the original postings come down off live ATS boards.
+>
+> **Last updated:** 2026-05-02 (Session 2.2.1: companion file `docs/EVAL_SET_JDS.md` added with all 6 JD bodies extracted from the source docx, so calibration is no longer dependent on roles still being live)
 
 ---
 
@@ -135,11 +137,15 @@ This set was deliberately chosen to span the full scoring range — from "recrui
 
 ## How to use this file when iterating
 
-1. After any meaningful change to `SCORING_PROMPT.md`, run the prompt against the 6 postings (manually paste each JD; the eval-runner script will be built in Session 2).
+1. After any meaningful change to `SCORING_PROMPT.md`, run the prompt against the 6 postings:
+   - `cat docs/EVAL_SET_JDS.md >> MANUAL_JDS.md`
+   - `python scripts/score_jobs.py`
+   - Read `_local/digest.md` and compare each role's `final_score` to the target below.
 2. Compare the model's `final_score` to the target above.
 3. If any posting is off by **> 1 point**, the prompt isn't working — iterate before shipping.
 4. If a posting is off by **exactly 1 point**, judgment call — usually fine, but read the model's reasoning and check if it's defensible.
 5. **If your judgment changes** about a posting (e.g., you decide Ebury is actually a 5 not a 6), update this file *first*, then re-run the prompt against the new target.
+6. **If you want to add a 7th, 8th, … posting** to the gold set: append a new section to this file with the same structure (label, target, per-dimension reasoning, expected verdict, resume choice, H1B), AND append the JD body to `docs/EVAL_SET_JDS.md` in the same format the runner reads.
 
 ---
 
