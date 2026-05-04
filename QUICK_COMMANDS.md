@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-05-02 (Session 2.2.1 — eval-set re-run is now a concrete one-liner now that `docs/EVAL_SET_JDS.md` exists)
+> **Last updated:** 2026-05-03 (Session 2.2.2 — eval set grew from 6 → 8 entries; bumped re-run cost note from ~$0.72 to ~$0.96)
 
 ---
 
@@ -28,7 +28,7 @@
 | When you want to... | Say to Claude... |
 |---|---|
 | Save a Claude-generated file local-only (won't go to GitHub) | *"Save this in `_drafts/`"* — files in `_drafts/`, `_local/`, or `scratch/` are gitignored |
-| Re-run the eval set against the current scoring prompt | `cat docs/EVAL_SET_JDS.md >> MANUAL_JDS.md && python scripts/score_jobs.py` — then compare `_local/digest.md` scores against targets in `docs/EVAL_SET.md`. Cost ~$0.72 per run. |
+| Re-run the eval set against the current scoring prompt | `cat docs/EVAL_SET_JDS.md >> MANUAL_JDS.md && python scripts/score_jobs.py` — then compare `_local/digest.md` scores against targets in `docs/EVAL_SET.md`. Cost ~$0.96 per run (8 entries × ~$0.12). |
 | Trigger the calibration deep-dive ritual | *"Run the calibration deep-dive playbook with me. The monthly QC flagged {inversion type}. Walk me through it step by step."* |
 | Add a company to the list | *"Add {Company} to COMPANY_LIST.md as Tier {N}, geo {Seattle/SF/London/Multiple}, H1B {✅/⚠️/❌}."* |
 | Score a single role manually | *"Score this posting against my scoring prompt: {paste JD}. Use the JSON output schema from SCORING_PROMPT.md."* |

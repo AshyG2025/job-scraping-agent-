@@ -6,7 +6,7 @@
 >
 > **Sync rule:** Per `CLAUDE.md` Rule 7, framework changes to the local working copy (new tier, new sub-tier, changed filter logic) must be reflected here in the same edit. Adding / removing specific companies inside an existing tier does not propagate.
 >
-> **Last updated:** 2026-04-30 (initial public copy)
+> **Last updated:** 2026-05-03 (added new Tier 1 sub-section **AI / Data infrastructure growth-stage — US (Series C+)** + added Women in Tech Jobs to Always-on aggregators)
 
 ---
 
@@ -17,6 +17,9 @@ Public US tech employers with platform / integration / API / multi-stakeholder P
 
 ### FinTech growth-stage — US (Series C+)
 Series C+ US FinTech companies with platform PM roles — payment platforms, B2B fintech rails, embedded finance, BNPL, banking-as-a-platform, card-issuing — where H1B-PM sponsorship is plausible but per-company verification is required. Geo focus: SF Bay.
+
+### AI / Data infrastructure growth-stage — US (Series C+)
+Series C+ US AI / data-platform companies with platform PM roles — data-for-AI platforms, ML platforms, data-production tooling, agent platforms, expert workflow + annotator infrastructure — where H1B-PM sponsorship is plausible but per-company verification is required. Geo focus: SF Bay.
 
 ### Big Tech / Public + Growth — UK / London (no visa filter)
 UK-based public tech and growth-stage employers in B2B SaaS / FinTech with platform / integration PM roles in scope. London geo focus; no visa-eligibility filter applies for this market.
@@ -57,6 +60,7 @@ Beyond the named-company scrape, the agent pulls from these **aggregator boards*
 - **LinkedIn** (via Apify) — title + geo + posting-age filters
 - **TrueUp** (truup.com) — Tech-focused aggregator, already part of my manual workflow
 - **Welcome to the Jungle** (welcometothejungle.com, formerly Otta) — Strong London / EU tech-PM coverage; scrape via Apify community actor
+- **Women in Tech Jobs** (jobs.womenintech.co.uk) — London-focused tech jobs board; implementation approach TBD (likely Apify community actor or small custom scraper)
 
 ### Startup / VC-backed boards (covers growth-stage companies not on the named list)
 - **Y Combinator's Work at a Startup** (workatastartup.com) — YC portfolio companies, all stages; useful for catching YC growth-stage cos.

@@ -12,7 +12,7 @@
 >
 > **Why JD bodies are committed (not gitignored):** Each JD is from a public job posting at the time of capture (April 2026). They contain no personal information about Ayesha and no proprietary content from her past employer. They're functionally identical to the entries the live scrapers produce — just frozen in time so calibration stays runnable indefinitely.
 >
-> **Last updated:** 2026-05-02 (Session 2.2.1 — initial extraction from `Job Posting samples/JD mapping to my exp..docx`)
+> **Last updated:** 2026-05-03 (Session 2.2.2 — added Posting 7: Snorkel.AI Sr PM, Platform (HM-callback after warm referral, target 9) and Posting 8: Zillow/FUB Sr PM AI Platform & Ecosystem (user-judged good fit, Seattle, target 8 — likely the same role as the original Session 2.0 validation JD). Total entries now 8; full re-run cost ~$0.96 (8 × $0.12).)
 
 ---
 
@@ -148,4 +148,130 @@ Knowledge of financial metrics like ARR, MRR, and LTV/CAC ratios.
 About Rippling
 Rippling gives businesses one place to run HR, IT, and Finance. It brings together all of the workforce systems that are normally scattered across a company, like payroll, expenses, benefits, and computers. For the first time ever, you can manage and automate every part of the employee lifecycle in a single system.Take onboarding, for example. With Rippling, you can hire a new employee anywhere in the world and set up their payroll, corporate card, computer, benefits, and even third-party apps like Slack and Microsoft 365—all within 90 seconds.Based in San Francisco, CA, Rippling has raised $1.85B+ from the world’s top investors—including Kleiner Perkins, Founders Fund, Sequoia, Greenoaks, and Bedrock—and was named one of America's best startup employers by Forbes.We prioritize candidate safety. Please be aware that all official communication will only be sent from @__Rippling.com__ addresses.About The RoleThe Talent Management team owns a suite of products that help Rippling customers manage, develop, and retain their employees.As a Product Lead on the Talent Management team, you will play a pivotal role in shaping the direction of this initiative by owning the vision, strategy, and execution for a core set of products within the suite. You will work cross-functionally with engineering, design, data science, and go-to-market teams to deliver innovative solutions that help managers become better leaders and employees grow in their careers. You will own the roadmap for your product area, determining which capabilities the team should invest in based on a deep understanding of customer needs, the competitive landscape, and Rippling’s unique strengths.What You Will Do * Define and execute the product vision, strategy, and roadmap for a portfolio of products within the Talent Management suite. * Collaborate closely with engineering, design, data science, and go-to-market teams to launch innovative features that help managers become better leaders. * Deeply understand the competitive landscape and customer needs to prioritize investments and ensure product-market fit for the products you own. * Define and analyze key success metrics to measure the adoption, impact, and business value of your product area. * Identify and execute on opportunities to integrate insights from your products into other areas of the Rippling platform, maximizing their value for customers. What You Will Need * 8+ years of Product Management experience. * Self-starter with a bias towards action. * Ability to thrive in a fast-paced environment. * Strong product and usability instincts. * Helicopter pilot mentality: you can easily switch from high-level strategy and planning to UI polish and data model details. * Exceptional written and verbal communication skills. * Experience building complex workflows and integration/marketplace products. * Founder or hyper-growth startup experience a strong plus. * Strong alignment with our __leadership principles__: in particular Go and See, Push the Limits of Possible, and Are Right, a Lot.
 *****************************************
+---
+
+## Snorkel.AI — Senior Product Manager — Platform
+**URL:** (supplied by Ayesha during session 2026-05-03 — original posting may or may not still be live)
+**Posted:** unknown (frozen snapshot — Job #7 (eval target 9; HM-callback after warm referral))
+**Source:** eval set (calibration)
+
+---
+About Snorkel
+
+At Snorkel, we believe meaningful AI doesn't start with the model, it starts with the data.
+
+We're on a mission to help enterprises transform expert knowledge into specialized AI at scale. The AI landscape has gone through incredible changes between 2015, when Snorkel started as a research project in the Stanford AI Lab, to the generative AI breakthroughs of today. But one thing has remained constant: the data you use to build AI is the key to achieving differentiation, high performance, and production-ready systems. We work with some of the world's largest organizations to empower scientists, engineers, financial experts, product creators, journalists, and more to build custom AI with their data faster than ever before. Excited to help us redefine how AI is built? Apply to be the newest Snorkeler!
+
+The Role
+
+We are seeking a Senior Product Manager to own the core platform that powers all data operations across our ecosystem. This platform enables experts to efficiently produce high-quality data, supports internal operations at scale, and provides reliable APIs and SDKs for customers.
+
+In this role, you will own the end-to-end experience of our data platform — from expert tooling and workflow orchestration, to identity and access management, data ingestion, versioning, and delivery. You will define platform strategy, set the roadmap, and partner closely with Engineering, Research, and Operations to build scalable, reliable systems that support high-throughput, high-quality data production.
+
+This is a highly cross-functional, technically deep IC role with broad surface area and significant impact. You will lead initiatives spanning multiple teams, balancing near-term execution with long-term platform evolution.
+
+What You'll Do
+
+Own the product vision, strategy, and roadmap for the core platform supporting expert contributors, internal operations, and customers.
+
+Define and deliver expert tooling, workflow orchestration systems, and internal ops controls that improve productivity, quality, and scalability.
+
+Lead platform initiatives across data ingestion, storage, versioning, permissions/IAM, and system reliability.
+
+Partner deeply with Engineering to make informed tradeoffs across APIs, data models, system architecture, and platform abstractions.
+
+Collaborate with Research and Operations to ensure platform capabilities support evolving RLHF methodologies and operational needs.
+
+Build and evolve APIs and SDKs that enable customers to seamlessly access the platform capabilities
+
+Drive metrics across throughput, cycle time, quality, cost efficiency, platform adoption, and reliability.
+
+Identify platform bottlenecks and lead cross-team efforts to improve performance, scalability, and experts experience.
+
+Balance short-term delivery with long-term platform investments to support future growth.
+
+Minimum Qualifications
+
+5–7 years of experience as a Product Manager, with ownership of complex, cross-functional product areas.
+
+Experience building internal tools, ops platforms, or data platforms at scale.
+
+Strong technical fluency, with comfort discussing APIs, data models, system design, and infrastructure tradeoffs with engineering teams.
+
+Proven ability to own end-to-end product experiences across multiple user personas.
+
+Strong analytical and problem-solving skills, with a track record of metrics-driven decision making.
+
+Excellent collaboration skills and experience partnering closely with Engineering, Research, and Operations teams.
+
+Preferred Qualifications
+
+Experience building platforms that support human-in-the-loop or data production workflows.
+
+Background in data infrastructure, ML platforms, or enterprise SaaS products.
+
+Experience designing APIs or developer-facing platforms.
+
+Demonstrated ability to lead large, cross-team initiatives without formal authority.
+---
+
+## Zillow Group (Follow Up Boss) — Senior Product Manager — AI Platform & Ecosystem
+**URL:** (supplied by Ayesha during session 2026-05-03 — original posting may or may not still be live)
+**Posted:** unknown (frozen snapshot — Job #8 (eval target 8; user-judged good fit, Seattle, H1B sponsor))
+**Source:** eval set (calibration)
+
+---
+About the team
+
+Follow Up Boss (FUB), part of Zillow Group, is a leading CRM for high-performing real estate teams, serving more than 100,000 agents. Our mission is to help agents deliver exceptional client experiences, run their business with ease, and win more deals. Within the FUB Product organization, this team is building the AI platform and ecosystem capabilities that power the next generation of product experiences, helping agents spend less time navigating software and more time building relationships.
+
+About the role
+
+We're looking for a Senior Product Manager to help shape how AI works across Follow Up Boss. In this role, you'll lead the platform capabilities that connect AI to FUB's data, workflows, and integrations, making it possible to build smarter, more useful experiences for agents. You'll influence how AI-powered experiences understand context, take action, and become more personalized over time. This is a high-impact opportunity to define platform strategy, partner deeply with cross-functional teams, and help turn emerging AI capabilities into meaningful customer and business value.
+
+You Will Get To
+
+Own the strategy and evolution of the platform capabilities that enable AI assistants, workflows, and integrations to interact with Follow Up Boss in reliable, scalable ways.
+
+Define how internal AI systems and external partners connect to FUB data and actions through clear, well-designed tools and integration patterns.
+
+Shape the context and intelligence capabilities that help AI better understand agent and lead activity, including signals, summaries, and data quality improvements.
+
+Lead the product direction for memory capabilities that make AI experiences more personalized and useful across interactions over time.
+
+Partner closely with engineering, AI/ML, design, and product peers to assess tradeoffs, define solutions, and ship iteratively.
+
+Help identify and prioritize the highest-value platform and ecosystem opportunities based on product needs, usage patterns, and long-term strategy.
+
+Drive alignment across teams by communicating roadmap priorities, progress, and strategic decisions clearly to stakeholders and leadership.
+
+Contribute to the long-term vision for how AI platform capabilities show up in product experiences across web, mobile, automation, and assistant surfaces.
+
+This role has been categorized as a Remote position. "Remote" employees do not have a permanent corporate office workplace and, instead, work from a physical location of their choice, which must be identified to the Company. U.S. employees may live in any of the 50 United States, with limited exceptions.
+
+In California, Connecticut, Maryland, Massachusetts, New Jersey, New York, Washington state, and Washington DC the standard base pay range for this role is $148,600.00 - $237,400.00 annually. This base pay range is specific to these locations and may not be applicable to other locations.
+
+In Colorado, Hawaii, Illinois, Minnesota, Nevada, Ohio, Rhode Island, and Vermont the standard base pay range for this role is $141,200.00 - $225,600.00 annually. The base pay range is specific to these locations and may not be applicable to other locations.
+
+In addition to a competitive base salary this position is also eligible for equity awards based on factors such as experience, performance and location. Actual amounts will vary depending on experience, performance and location. Employees in this role will not be paid below the salary threshold for exempt employees in the state where they reside.
+
+Who you are
+
+5+ years of product management experience, ideally in platform, infrastructure, AI, LLMs, workflow, or other technically complex product spaces.
+
+Strong technical fluency and the ability to work closely with engineers on APIs, integrations, data models, and system design decisions.
+
+Experience building AI-powered products, with a strong understanding of how tools, context, memory, evaluation, and reliability come together in real product experiences.
+
+A systems-oriented mindset and the ability to think beyond individual features to design capabilities that support multiple use cases and consumers.
+
+A track record of defining success metrics, using data to measure impact, and making strong product decisions in ambiguous environments.
+
+Clear communication skills, including the ability to translate complex ideas into strong product thinking, crisp documentation, and aligned execution.
+
+A bias for action, strong judgment, and comfort balancing speed with long-term quality in a fast-moving environment.
+
+Experience with CRMs, workflow automation, B2B SaaS, external integrations, or adjacent AI platform capabilities is a plus.
+
+Here at Zillow - we value the experience and perspective of candidates with non-traditional backgrounds. We encourage you to apply if you have transferable skills or related experiences.
 ---
