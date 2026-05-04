@@ -6,7 +6,7 @@
 >
 > **Sync rule:** Per `CLAUDE.md` Rule 7, framework changes to the local working copy (role brief, great-match / weak-match criteria, geography rules, flagship metrics, resume-selection routing logic) must be reflected here in the same edit. Adding / removing specific companies in target lists, editing the comp section, or adjusting Referral Network does not propagate.
 >
-> **Last updated:** 2026-05-02 (Session 2.2: added "Problem-shape framings" sub-block to each of the 4 flagships — 6–8 illustrative framings per flagship that describe the same underlying work in different domain vocabularies, so the matcher can recognize situational matches even when JDs use unfamiliar terms. Companion change in `SCORING_PROMPT.md` v1.1 adds the prompt-side guardrail. Earlier 2026-04-30: initial public copy — genericized from local source.)
+> **Last updated:** 2026-05-03 (Session 2.3: WFM Vendor Central Integration Platform flagship #1 overhauled against the v3 deep-dive artifact. Architecture and API claims corrected (monolith-first with planned extractions; pilot portal-only with progressive Wave 2 APIs); scaling curve to 1,000+ partners over 18 months added; pilot-stage $600K outcome, team size, program duration, churn + NPS metrics added. 10 new problem-shape framings (#9–#18) added to flagship #1 — unlocks distributed-systems / multi-tenant SaaS / ledger-migration / config-platform JD recognition. Earlier 2026-05-02 (Session 2.2): added "Problem-shape framings" sub-block to each of the 4 flagships. Earlier 2026-04-30: initial public copy.)
 
 ---
 
@@ -73,18 +73,22 @@ I'm also **open to companies not on the named list** if a Senior Platform PM rol
 
 ## My positioning (for the matcher to score against)
 
-**Primary narrative:** *Platform Product Manager with deep expertise building integration platforms, API products, multi-stakeholder systems, and regulatory product frameworks at scale. 7 years PM (11 years total). Consolidated 5 legacy systems into a unified platform serving 1,000+ external partners and 15+ internal teams at Amazon, designed 3-layer platform architecture with custom API suite, defined the global e-invoicing reference blueprint adopted across Amazon FinAuto's AP space, and delivered measurable impact across four flagship platform initiatives.*
+**Primary narrative:** *Platform Product Manager with deep expertise building integration platforms, API products, multi-stakeholder systems, and regulatory product frameworks at scale. 7 years PM (11 years total). Consolidated 5 legacy partner-facing systems into a unified platform that scaled to 1,000+ external partners + 15+ internal teams at Amazon, owned the translation-layer architecture and Wave-2 API surface that made convergence possible, defined the global e-invoicing reference blueprint adopted across Amazon FinAuto's AP space, and delivered measurable impact across four flagship platform initiatives.*
 
 **Four flagship project anchors** (the matcher should map JD requirements to whichever of these is most relevant):
 
 1. **WFM Vendor Central Integration Platform** (lead for: integration / API / multi-stakeholder / platform consolidation roles)
-   - 5 systems → 1 unified platform; 1,000+ external suppliers + 15+ internal teams
-   - 3-layer architecture (Presentation → Transformation → Data)
-   - 3 core APIs (Item Registration, Mapping Lookup, Bulk Sync)
-   - ID transformation system (ASIN ↔ UPC ↔ PLU)
-   - 90% onboarding-time reduction (8 weeks → 7 days); 80%+ adoption
-   - **Total cost discovered during initial project discovery: $20M** (the cost-savings opportunity that justified the program)
-   - **Revenue impact at 12–18 months post-launch: up to $17M generated through suppliers due to platform convergence**
+   - **5 supplier-facing legacy systems → 1 supplier surface**, on top of 3 backend systems-of-record (catalog, compliance, legal infra)
+   - **Scaled to 1,000+ external suppliers within 18 months** (5 pilot → ~150 → ~450 → ~900 → 1,000+); **15+ internal teams** integrated
+   - **Architecture: monolith-first onboarding service** with three planned service extractions (ID Resolution, Compliance/Document service, Event Bus)
+   - **ID translation layer** mapping multiple identifier schemes (with the platform's canonical key as the bridge) — the unlock that made convergence possible without forcing either side to change identifier models
+   - **Pilot was portal-only**; programmatic APIs (registration, item submission, bulk endpoints with partial-success, async compliance, webhooks, idempotency keys, cursor pagination) shipped progressively in **Wave 2** driven by real partner demand
+   - **90% onboarding-time reduction** (8 weeks → under 7 days for pilot; under 2 weeks at scale); **80%+ adoption** by new partners within 12 months
+   - **Mid-onboarding churn 3% → 1.4%** (directional attribution); **NPS uplift +35–40 across the two main flows**
+   - **Pilot-stage outcome: $600K immediate revenue** from the 5 pilot partners
+   - **Total annual cost-of-silo discovered at problem-sizing: $20M** (the opportunity-cost that justified the program)
+   - **Revenue impact at 12–18 months post-launch: up to $17M generated for partners via the platform**
+   - **Team: 7 engineers + 1 designer + 1 researcher**, IC PM with 0 direct reports; 12-month core program (~18 months including scaling)
 
    **Problem-shape framings (illustrative, not exhaustive — for situational matching when JDs describe the same underlying work in different domain vocabulary):**
    1. *Consolidate multiple legacy systems (5+) into a unified platform without disrupting live external partners (1,000+)*
@@ -95,6 +99,16 @@ I'm also **open to companies not on the named list** if a Senior Platform PM rol
    6. *Drive 0 → 80%+ adoption of a new internal platform across 15+ teams without top-down mandate*
    7. *Design identifier-translation logic (ID-mapping) that lets systems with different native identifier schemes reconcile without manual intervention*
    8. *Ship the API contracts that became the integration foundation for an external partner ecosystem (1,000+ partners onboarding 8w → 7d)*
+   9. *Design eventual-consistency between systems with different write cadences (real-time vs. batch), enforced by a per-attribute system-of-record matrix, deterministic conflict resolution, an append-only event log as canonical truth, and reconciliation jobs that surface drift before it becomes silent corruption*
+   10. *Build real multi-tenant isolation across data, compute, identity, encryption, audit, and operational layers — where partition-key-level enforcement and per-tenant KMS keys are the actual product call, not a flag-on-each-row "labeling" approach; surface contractual / antitrust risk to leadership when isolation has legal implications*
+   11. *Architect validation rules as configuration the business can update at runtime (schema-as-data), with additive-changes-free / breaking-changes-via-deprecation discipline — so the platform's evolution doesn't bottleneck on engineering capacity for every regulatory or category expansion*
+   12. *Run two systems in parallel during cutover with an explicit per-entity authoritative-state marker, dual event publication during the window, and reconciliation that catches drift before the legacy system is shut off — applicable to ledger migrations, core-banking migrations, ERP cutovers, and any "swap a live production system without losing state" pattern*
+   13. *Use early user research to detect when engineering-dependency-driven sequencing would deliver the wrong customer value, and make the harder call to re-sequence around customer pain rather than build complexity*
+   14. *Own the data-architecture decisions — which system is SoR for which attribute, what flows where at what cadence, what gets cached vs. pulled-on-demand — as product work, where engineering owns contract syntax / failure modes / retry semantics; validate via socialization with system owners + design-doc review + production behavior*
+   15. *Set the platform coverage target (e.g., 80%) by deriving from the addressable-population shape, not by picking an arbitrary completeness number — grounding feature-completeness decisions in product strategy, not engineering perfectionism*
+   16. *Architect the translation layer between identifier systems with explicit checklist coverage: schema flexibility, bulk-from-day-one, identifier authority, mapping versioning, mapping-confidence + human-in-loop, ingestion pipelines, and backward compatibility — so the layer doesn't ossify when new identifier types are needed*
+   17. *At the data-model level, brand and product are different dimensions and should be modeled separately, with linkage via a shared physical-product record — the unlock that makes white-label / multi-brand / private-label catalog work without identity collisions*
+   18. *Onboard the next partner cohort in parallel with technical extension work rather than waiting for full coverage — the velocity unlock that prevents "feature-complete" from becoming a gating ritual on revenue*
 
 2. **Mexico Tax Reconciliation Automation Platform** (lead for: data / operations / FinTech platform roles)
    - Multi-system integration: Amazon payment systems + Mexican government tax portal
