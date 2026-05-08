@@ -177,10 +177,16 @@ The matcher will drift — Claude API gets updated, you'll edit the brief, real-
 
 ## Status
 
-🟢 **Spec layer complete** (Sessions 1 + 1.5–1.7) — all spec docs shipped: `PROJECT_BRIEF`, `COMPANY_LIST`, `HARD_FILTERS`, `SCORING_PROMPT`, `APPLICATION_LOG`, `QC_PROCESS`, `docs/EVAL_SET`, `docs/CALIBRATION_DEEP_DIVE`, `docs/qc-reports/TEMPLATE`, plus `TABLE_OF_CONTENTS` and `QUICK_COMMANDS`.
+🟢 **Spec layer complete** (Sessions 1 + 1.5–1.7) — all spec docs shipped: `PROJECT_BRIEF`, `COMPANY_LIST`, `HARD_FILTERS`, `SCORING_PROMPT`, `APPLICATION_LOG`, `QC_PROCESS`, `docs/EVAL_SET`, `docs/EVAL_SET_JDS`, `docs/CALIBRATION_DEEP_DIVE`, `docs/qc-reports/TEMPLATE`, plus `TABLE_OF_CONTENTS` and `QUICK_COMMANDS`.
 
 🟢 **Phase A — scoring runner shipped** (Session 2.0, commit `2987855`) — `scripts/score_jobs.py` reads JDs from `MANUAL_JDS.md`, scores each via the Claude API (Opus 4.7, prompt caching on the 3-file system context), and writes a digest to `_local/digest.md` plus structured results to `_local/scored_results.json`. Validated end-to-end on real postings; eval-set anchors hold within ±1 of target. The verbose `verify_flags` field caught a v1 parser bug before any digest landed.
 
-🟡 **Phase B — career-page scrapers** — next up. Starting narrow (Stripe + Wise) before scaling toward ~50–70 named companies. Same `score_jobs.py` brain — scrapers just feed it.
+🟢 **Phase B — career-page scrapers (mostly shipped)** (Sessions 2.1–2.1.4) — `scripts/run_scrapers.py` orchestrator + per-ATS modules under `scripts/scrapers/` (`greenhouse`, `smartrecruiters`, `workday`, `ashby`). 30 of 47 named-company targets covered (~64%). Remaining 17 are intentionally deferred: ~10 are routed to the discovery channel (Apify LinkedIn) rather than bespoke scrapers, since their custom in-house ATSes aren't worth a per-co module; the rest are smaller modules pending (Lever, Workable, PhenomPeople). Coverage strategy is **partial-by-design** — named scrapers handle high-confidence targets, discovery handles the tail.
 
-🔴 **Phases C–E — not yet built** — Google Sheets storage, email digest delivery (Resend / Gmail), GitHub Actions cron schedule (Tue + Thu mornings PT).
+🟢 **Phase C — Google Sheets storage shipped** (Session 3.0, commit `6f5c6c5`) — `scripts/sheets.py` appends every scored role to a Google Sheet with a locked 31-column layout, sorted newest-first by score. Two engineering choices worth surfacing as platform-PM judgment calls: **(1)** `score_at_application` and `prompt_version_at_application` use Sheet formulas that auto-copy when `applied=Yes` and **survive sort** because the Sheets API SortRange updates row references server-side — picked over Apps Script or manual copy-paste because it adds zero moving parts. **(2)** JSON + Sheet are written in parallel during a 4-week proving period before the JSON is deprecated, so existing QC / eval scripts keep working through the migration rather than getting cut over in one shot. One-time setup walkthrough in `docs/PHASE_C_SETUP.md`.
+
+🟡 **Phase D — email digest** — not yet built. Resend or Gmail API; pushes high-score rows + asset-match suggestions to inbox so the daily UI isn't the Sheet.
+
+🟡 **Phase E — GitHub Actions cron** — not yet built. Tue + Thu mornings PT (highest job-posting volume days). Phase-E activation is also when scraper-volume monitoring becomes worth more than a glance per `QC_PROCESS.md`.
+
+🔵 **V2 (after V1 phases close)** — outcome-driven few-shot examples in `SCORING_PROMPT.md` once 50+ application outcomes have accumulated; a dedicated **Resume & Cover Letter Expert Agent** (ATS-focused, authenticity-bounded, intentional-tweaks framing) that replaces the current bullet-tweak suggestions with a properly drafted tailored resume + cover letter; LinkedIn parsing for hiring managers / recruiters of prioritized roles; Notion as primary view.
