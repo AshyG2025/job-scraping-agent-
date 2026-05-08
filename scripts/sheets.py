@@ -276,13 +276,29 @@ def _get_worksheet():
 
 
 def _ensure_header(worksheet) -> None:
-    """Write the locked 31-col header row if row 1 doesn't already match."""
+    """
+    Write the locked 31-col header row when row 1 is empty.
+
+    If row 1 is non-empty AND doesn't match COLUMN_NAMES, raise — silently
+    overwriting a populated Sheet's header would misalign every existing data
+    row underneath the new column positions. Better to fail loudly so a future
+    schema change can be migrated deliberately rather than corrupting outcomes.
+    """
     existing = worksheet.row_values(1)
     if existing == COLUMN_NAMES:
         return
-    # Either empty or wrong — overwrite row 1 to match the locked schema.
+    if existing:
+        raise RuntimeError(
+            "Sheet header doesn't match expected schema; refusing to overwrite "
+            "to avoid silently misaligning existing data rows. "
+            f"Existing first 3: {existing[:3]}. "
+            f"Expected first 3: {COLUMN_NAMES[:3]}. "
+            "Either fix the Sheet header manually or migrate the data, then re-run."
+        )
     last_col = _col_letter(len(COLUMN_NAMES))
-    worksheet.update(f"A1:{last_col}1", [COLUMN_NAMES])
+    # gspread 6.x signature: update(values, range_name, ...). Use kwargs to
+    # be explicit and resilient to any future signature shifts.
+    worksheet.update(values=[COLUMN_NAMES], range_name=f"A1:{last_col}1")
 
 
 def _sort_data_rows(worksheet) -> None:

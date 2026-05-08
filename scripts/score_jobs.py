@@ -238,9 +238,25 @@ def archive_processed(original_text: str, entries: list[dict]) -> None:
     PROCESSED_FILE.write_text(existing + "\n".join(archive_block))
 
     # Reset MANUAL_JDS.md to a clean template (preserves header + instructions).
-    template = INPUT_FILE.read_text().split("<!-- ENTRIES BELOW -->", 1)
-    if len(template) == 2:
-        INPUT_FILE.write_text(template[0] + "<!-- ENTRIES BELOW -->\n")
+    # Detect missing/duplicate markers and surface loudly — silent no-op here
+    # would re-score the same JDs at full token cost on the next run, and
+    # silent reset under duplicate markers could discard user-pasted content.
+    parts = INPUT_FILE.read_text().split("<!-- ENTRIES BELOW -->")
+    if len(parts) == 2:
+        INPUT_FILE.write_text(parts[0] + "<!-- ENTRIES BELOW -->\n")
+    elif len(parts) == 1:
+        print(
+            f"⚠️  '<!-- ENTRIES BELOW -->' marker not found in {INPUT_FILE.name}. "
+            f"File NOT reset — the same JD entries will be re-scored on the "
+            f"next run (at full token cost). Manually clear processed entries "
+            f"OR re-add the marker line below the [TEMPLATE] block."
+        )
+    else:
+        print(
+            f"⚠️  Found {len(parts) - 1} '<!-- ENTRIES BELOW -->' markers in "
+            f"{INPUT_FILE.name} (expected exactly 1). File NOT reset to avoid "
+            f"silent data loss. Remove duplicate markers and re-run."
+        )
 
 
 def main() -> None:
