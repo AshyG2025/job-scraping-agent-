@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-05-03 (Session 2.2.2 — eval set grew from 6 → 8 entries; bumped re-run cost note from ~$0.72 to ~$0.96)
+> **Last updated:** 2026-05-07 (Phase C — Google Sheets storage shipped; added Sheets-pipeline + diagnostic entries)
 
 ---
 
@@ -78,6 +78,8 @@
 | Close the current Terminal tab | `Cmd + W` |
 | See a folder's contents | `ls "/path/to/folder"` |
 | Go to a folder | `cd "/path/to/folder"` |
+| Open `.env` (or any hidden file) in TextEdit | `open -a TextEdit .env` (run from the project root) |
+| Toggle hidden files on/off in Finder | `Cmd + Shift + .` (period) |
 
 ---
 
@@ -89,7 +91,9 @@
 | Activate the venv in a new terminal session | `source .venv/bin/activate` | Prefix changes to `(.venv)` to confirm. Needed before every run. |
 | Run the auto-scrapers (Stripe + Wise) | `python scripts/run_scrapers.py` | Hits each company's ATS API, applies title/geo/age filters, dedupes against `_local/scraped_seen.json`, appends new JDs to `MANUAL_JDS.md`. Prints a per-company funnel summary. ~30 sec total. |
 | Score whatever's in `MANUAL_JDS.md` | `python scripts/score_jobs.py` | Output: `_local/digest.md` + `_local/scored_results.json`. Reads `ANTHROPIC_API_KEY` from `.env`. |
-| Full pipeline (scrape → score) | `python scripts/run_scrapers.py && python scripts/score_jobs.py` | Tuesday/Thursday-morning one-liner. ~5–10 min total + ~$1 in API cost per run. |
+| Full pipeline (scrape → score → Sheet) | `python scripts/run_scrapers.py && python scripts/score_jobs.py` | Tuesday/Thursday-morning one-liner. As of Phase C, scoring also appends rows to your Google Sheet. ~5–10 min total + ~$1 in API cost per run. |
+| Verify the Google Sheet connection | `python scripts/check_sheets.py` | Prints `✅ Connected. Sheet title: ...` on success. Run after Phase C setup or any time scoring stops writing to the Sheet. |
+| Re-do the Phase C setup (key rotation, new machine, etc.) | Open `docs/PHASE_C_SETUP.md` | The 9-step walkthrough is the canonical path. Time: ~10–15 min. |
 | Deactivate the venv | `deactivate` | Drops the `(.venv)` prefix; reverts to system Python. |
 
 ---

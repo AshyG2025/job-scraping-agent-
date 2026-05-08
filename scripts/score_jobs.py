@@ -85,6 +85,7 @@ def parse_manual_jds(text: str) -> list[dict]:
         url = _grab_field(block, "URL")
         posted_raw = _grab_field(block, "Posted")
         applicants_raw = _grab_field(block, "Applicants")
+        source_raw = _grab_field(block, "Source")
         jd_body = _grab_jd_body(block)
 
         entries.append({
@@ -93,6 +94,7 @@ def parse_manual_jds(text: str) -> list[dict]:
             "url": url,
             "posting_age_days": _parse_int(posted_raw),
             "applicants_count": _parse_int(applicants_raw),
+            "source": _parse_source(source_raw),
             "jd_text": jd_body,
         })
     return entries
@@ -116,6 +118,15 @@ def _parse_int(raw: str | None) -> int | None:
         return None
     m = re.search(r"\d+", raw)
     return int(m.group()) if m else None
+
+
+def _parse_source(raw: str | None) -> str:
+    """Extract the ATS / channel name from the Source field, e.g.
+    `greenhouse (auto-scraped)` → `greenhouse`. Defaults to `manual` for
+    paste-in entries that have no Source field."""
+    if not raw:
+        return "manual"
+    return raw.split("(", 1)[0].strip().lower() or "manual"
 
 
 def build_user_message(entry: dict) -> str:
@@ -261,6 +272,7 @@ def main() -> None:
                 "scored_at": datetime.now().isoformat(timespec="seconds"),
                 "model": MODEL,
                 "effort": EFFORT,
+                "source": entry.get("source", "manual"),
                 "usage": usage,
             }
             results.append(parsed)
@@ -279,6 +291,19 @@ def main() -> None:
     print(f"\nWrote: {RESULTS_JSON.relative_to(PROJECT_ROOT)}")
     print(f"Wrote: {DIGEST_MD.relative_to(PROJECT_ROOT)}")
     print(f"Archived processed entries to: {PROCESSED_FILE.name}")
+
+    # Phase C: append rows to the Google Sheet (Decision 3 — keep both JSON + Sheet).
+    # Failure here doesn't fail the run — the JSON write above is still authoritative.
+    try:
+        import sheets  # local-package import (sys.path was set in run_scrapers; here we add it inline)
+    except ImportError:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import sheets  # type: ignore
+    try:
+        n_written = sheets.write_results(results)
+        print(f"Appended {n_written} row(s) to Google Sheet.")
+    except Exception as e:
+        print(f"⚠️ Sheet write failed (non-fatal — JSON results above are still good): {e}")
 
 
 if __name__ == "__main__":
