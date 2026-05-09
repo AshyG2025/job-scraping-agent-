@@ -6,8 +6,8 @@
 >
 > **Adapted from:** `Job Posting samples/Platform PM Role ANALYZER - Instructions.docx` (Ayesha's existing analyzer prompt, condensed and given a structured output format).
 >
-> **Prompt version:** `v1.1` — bump on every meaningful change; record what changed in the **Iteration log** at the bottom.
-> **Last updated:** 2026-05-02
+> **Prompt version:** `v1.2` — bump on every meaningful change; record what changed in the **Iteration log** at the bottom.
+> **Last updated:** 2026-05-09
 
 ---
 
@@ -286,7 +286,7 @@ Two reasoning fields are **always present** so QC is possible on every score:
 
 ```json
 {
-  "prompt_version": "v1.1",
+  "prompt_version": "v1.2",
 
   "company": "Wise",
   "title": "Senior Product Manager — Treasury Ledger Platform",
@@ -379,18 +379,23 @@ Two reasoning fields are **always present** so QC is possible on every score:
 
 ## Calibration: anchor against the gold set
 
-Before going live, this prompt is tested against `docs/EVAL_SET.md` (Ayesha's 6 labeled sample postings). The expected scores are:
+Before going live, this prompt is tested against `docs/EVAL_SET.md` (Ayesha's 9 labeled gold-standard postings). The expected scores are:
 
-| Posting | Expected score | Verdict |
-|---|---|---|
-| Wise Invoicing PM | 8 | `apply` |
-| Wise Treasury Ledger | 9 | `prioritize` |
-| Liberis Financial Systems | 8 | `apply` |
-| Ebury API Platform | 6 | `consider` |
-| Boku Growth PM (Mandarin required) | 3 | `weak` (Mandarin requirement is dealbreaker) |
-| Rippling Talent Mgmt | 2 | `skip` (manager scope, weak domain) |
+| Posting | Expected score | Verdict | Notes |
+|---|---|---|---|
+| Wise Invoicing PM | 8 | `apply` | |
+| Wise Treasury Ledger | 9 | `prioritize` | callback-anchored (recruiter outreach) |
+| Liberis Financial Systems | 9 | `prioritize` | callback-anchored (recruiter outreach 2026-05-03; was 8 pre-callback) |
+| Ebury API Platform | 6 | `consider` | |
+| Boku Growth PM (Mandarin required) | 3 | `weak` | Mandarin requirement is dealbreaker |
+| Rippling Talent Mgmt | 2 | `skip` | manager scope, weak domain |
+| Snorkel.AI Sr PM, Platform | 9 | `prioritize` | HM-callback after warm referral |
+| Zillow/FUB Sr PM, AI Platform & Ecosystem | 7 | `apply` | retuned 8 → 7 on 2026-05-03 |
+| Wise Sr PM, Cards Pay-in Orchestration | 9 | `prioritize` | callback-anchored (recruiter + HM call 2026-05-09) |
 
 If the prompt scores any of these more than 1 point off the expected score, **iterate the prompt before going live**. The eval set is the source of truth for whether the matcher is working.
+
+**Callback-anchor convention:** Entries marked "callback-anchored" carry a +1 outcome anchor on top of the JD-vs-profile fit. The matcher cannot see outcomes, so a Δ -1 from the model on these entries is **expected design behavior, not drift** (see `docs/EVAL_SET.md` §"How to use", point 4). Don't iterate to "fix" Δ -1 on callback-anchored entries.
 
 ---
 
@@ -443,6 +448,7 @@ Track every meaningful change to this prompt here. Bump `prompt_version` in the 
 |---|---|---|---|---|
 | `v1.0` | 2026-04-27 | Initial draft adapted from Platform PM Role Analyzer doc | Bootstrap | Untested against eval set yet — Session 2 first run will validate |
 | `v1.1` | 2026-05-02 | Added "Situational matching — read the problem-shape, not just the keywords" section after Dimension 4. Added one-paragraph mention in Dimensions 2 (Skills) + 4 (Team Needs) pointing to the new section. Companion change in `PROJECT_BRIEF.md`: each of the 4 flagships now has a "Problem-shape framings" sub-block (6–8 illustrative framings per flagship). Added 4th flagship (FinAuto E-Invoicing Blueprint) to the abbreviated flagship-evidence list under Dimension 2. Refreshed WFM canonical numbers ($9.6M → $20M cost / $17M revenue). | Session 2.2 — minor version (definition / wording change; should not move scores by >1). Calibration validated against Liberis (target 8, scored 9 under v1.0), Wise Treasury (target 9), PayPal R0136354 (v1.0 baseline 8), Salesforce MuleSoft (v1.0 baseline 8) — see Session 2.2 commit. |
+| `v1.2` | 2026-05-09 | Refreshed §"Calibration: anchor against the gold set" table to match current `EVAL_SET.md` state (was stale at 6 entries; now lists all 9). Added Snorkel (Posting 7), Zillow/FUB (Posting 8), Wise Cards Pay-in (Posting 9). Fixed Liberis from 8 → 9 (upgraded 2026-05-03 post-callback). Added explicit "callback-anchor convention" note below the table so readers know Δ -1 on those entries is expected. | Session 3.2 — pure documentation hygiene; no scoring instructions changed. Bumped to v1.2 because *any* prompt-text change invalidates the prompt cache and warrants a calibration re-run by project convention. | **Partial validation (5 of 9):** Wise Invoicing 8/8 (Δ 0), Wise Treasury 9/9 (Δ 0), Liberis 9/9 (Δ 0), Ebury 6/6 (Δ 0), Boku 3/3 (Δ 0). Remaining 4 (Rippling, Snorkel, Zillow/FUB, Wise Cards Pay-in) failed mid-run on Anthropic API credit exhaustion (billing issue, **unrelated to prompt change**) — deferred until credit refill. Zero drift on what ran = strong evidence the doc-only change had no behavioral impact. **Side observation flagged for next monthly QC:** Wise Treasury + Liberis (both target-9 callback-anchored) scored AT 9 not 8 — the callback-anchor convention predicts Δ -1; possible the +1 outcome anchor is partially redundant on roles where the JD-vs-profile read is already strong. Worth examining at next QC. |
 
 **Convention:**
 - Bump minor version (`v1.0 → v1.1`) for definition / wording changes that shouldn't change scores by > 1

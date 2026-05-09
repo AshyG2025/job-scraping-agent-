@@ -12,7 +12,7 @@
 >
 > **Why JD bodies are committed (not gitignored):** Each JD is from a public job posting at the time of capture (April 2026). They contain no personal information about Ayesha and no proprietary content from her past employer. They're functionally identical to the entries the live scrapers produce — just frozen in time so calibration stays runnable indefinitely.
 >
-> **Last updated:** 2026-05-03 (Session 2.2.2 — added Posting 7: Snorkel.AI Sr PM, Platform (HM-callback after warm referral, target 9) and Posting 8: Zillow/FUB Sr PM AI Platform & Ecosystem (user-judged good fit, Seattle, target 8 — likely the same role as the original Session 2.0 validation JD). Total entries now 8; full re-run cost ~$0.96 (8 × $0.12).)
+> **Last updated:** 2026-05-09 (Session 3.2 — added Posting 9: Wise Sr PM Cards Pay-in Orchestration (London; recruiter reached out 2026-05-09 + HM call scheduled week of 2026-05-12; callback-anchored target 9, JD-vs-profile read 8). JD body re-fetched live from `api.smartrecruiters.com/v1/companies/wise/postings/744000124645774` since MANUAL_JDS.md had already been cleared by `score_jobs.py`. Total entries now **9**; full re-run cost ~$1.08 (9 × $0.12). Earlier 2026-05-03 (Session 2.2.2 — added Posting 7: Snorkel.AI Sr PM, Platform (HM-callback after warm referral, target 9) and Posting 8: Zillow/FUB Sr PM AI Platform & Ecosystem (user-judged good fit, Seattle, target 8 — likely the same role as the original Session 2.0 validation JD).)
 
 ---
 
@@ -274,4 +274,27 @@ A bias for action, strong judgment, and comfort balancing speed with long-term q
 Experience with CRMs, workflow automation, B2B SaaS, external integrations, or adjacent AI platform capabilities is a plus.
 
 Here at Zillow - we value the experience and perspective of candidates with non-traditional backgrounds. We encourage you to apply if you have transferable skills or related experiences.
+---
+
+## Wise — Senior Product Manager — Cards Pay-in Orchestration
+**URL:** https://jobs.smartrecruiters.com/wise/744000124645774
+**Posted:** unknown (frozen snapshot — Job #9 (eval target 9, callback-anchored — recruiter reached out 2026-05-09 + HM call scheduled week of 2026-05-12))
+**Source:** eval set (calibration) — JD body re-fetched live from `api.smartrecruiters.com/v1/companies/wise/postings/744000124645774` on 2026-05-09 since MANUAL_JDS.md had already been cleared by `score_jobs.py` after the Session 3.1 LinkedIn discovery first-firing
+
+---
+We move 5% of the world's money. Using a debit or credit card to fund a transfer is one of the most popular payment methods used by our customers, and we use acquirers to process ~£1bn in monthly card payment volume.
+
+A card payment first passes through our fraud and authentication engines, determining if it's safe to process. This is managed by the Cards Pay-in Authentication team, the sister team to Orchestration.
+
+The Cards Pay-in Orchestration team decides which acquirer a payment should be routed to for maximum chance of being accepted. In this role you'll be responsible for the product vision, strategy and roadmap for Orchestration. This requires:
+
+• Defining the multi-year vision for our orchestration infrastructure to move from static rules to dynamic, machine-learning routing - and working with your engineers and analysts to deliver this vision.
+
+• Ensuring our payments are fully optimised to be routed between our acquirers, adjusting for regional / issuer level differences.
+
+• Managing the acquirer portfolio to support the growth of card pay-ins via new markets, card schemes and product types e.g. e-commerce payments.
+
+• Keeping acquirer costs as low as possible for our customers, balancing performance with the cost of acquiring.
+
+In crafting the strategy and roadmap for Orchestration, you'll balance the opportunities against the regulatory, compliance and engineering needs of the domain.
 ---
