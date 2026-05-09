@@ -64,6 +64,12 @@ Product Experinces/
 # tailored resumes for past applications; not safe to push to a portfolio repo.
 Ayesha Resume/Resume to use repository/
 
+# Cover letters — local only.
+# Per-application cover letters paired with the tweaked resumes above.
+# Same reasoning as the resume repository: tailored content names companies
+# and roles, not safe to push to a portfolio repo.
+Ayesha Resume/Cover Letters/
+
 # Parallel manual workflow — not part of the job-scraping agent.
 # Lives in the project root for convenience only; never push.
 London Headhunters/
