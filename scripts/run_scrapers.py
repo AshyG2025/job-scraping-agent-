@@ -20,10 +20,16 @@ ATS_MODULES below.
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+# Load .env so per-module env vars (e.g. APIFY_API_TOKEN for linkedin_apify)
+# are available before any scraper module runs.
+load_dotenv()
+
 # Make scripts/ importable as a package when run as a script.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from scrapers import ashby, common, greenhouse, smartrecruiters, workday
+from scrapers import ashby, common, greenhouse, linkedin_apify, smartrecruiters, workday
 
 # === SOURCES TO SCRAPE ===
 # Slugs verified against each company's live ATS board on 2026-05-01.
@@ -71,6 +77,30 @@ SOURCES = [
     # Tier 1
     {"company": "Deliveroo",    "ats": "ashby", "slug": "deliveroo"},     # migrated off Greenhouse 2026-05-01
     {"company": "Ramp",         "ats": "ashby", "slug": "ramp"},
+
+    # ---- LinkedIn (Apify) — DISCOVERY channel ----
+    # Each entry = one LinkedIn /jobs/search URL built in incognito Chrome
+    # (logged-in URLs return 0 results). max_results capped per-source so total
+    # cost stays at ~$0.20/run ($1/1000 results × 200 results = ~$1.60/mo at 2x/wk).
+    # Companies aren't tied to COMPANY_LIST.md tiers — the Sheet shows tier="discovery".
+    {
+        "company": "LinkedIn — Seattle",
+        "ats": "linkedin_apify",
+        "search_url": "https://www.linkedin.com/jobs/search/?keywords=Product%20Manager&location=Seattle%2C%20Washington%2C%20United%20States&f_TPR=r2592000&f_E=4&f_JT=F&sortBy=DD",
+        "max_results": 67,
+    },
+    {
+        "company": "LinkedIn — SF Bay",
+        "ats": "linkedin_apify",
+        "search_url": "https://www.linkedin.com/jobs/search/?keywords=Product%20Manager&location=San%20Francisco%20Bay%20Area&f_TPR=r2592000&f_E=4&f_JT=F&sortBy=DD",
+        "max_results": 67,
+    },
+    {
+        "company": "LinkedIn — London",
+        "ats": "linkedin_apify",
+        "search_url": "https://www.linkedin.com/jobs/search/?keywords=Product%20Manager&location=London%2C%20England%2C%20United%20Kingdom&f_TPR=r2592000&f_E=4&f_JT=F&sortBy=DD",
+        "max_results": 67,
+    },
 ]
 
 # Note on Checkout.com: re-reconned to Workday (tenant `checkout`/site `CheckoutCareers`)
@@ -82,6 +112,7 @@ ATS_MODULES = {
     "smartrecruiters": smartrecruiters,
     "workday": workday,
     "ashby": ashby,
+    "linkedin_apify": linkedin_apify,
 }
 
 MANUAL_JDS_PATH = Path(__file__).resolve().parents[1] / "MANUAL_JDS.md"
