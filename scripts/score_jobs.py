@@ -275,7 +275,10 @@ def main() -> None:
 
     print(f"Found {len(entries)} JD(s) to score.\n")
 
-    client = anthropic.Anthropic()
+    # 120s per-request timeout: without this, a TCP socket that goes dead
+    # without a FIN packet can leave the SDK waiting forever (observed
+    # 2026-05-08: 11+ hour hang on first call against the 50-JD queue).
+    client = anthropic.Anthropic(timeout=120.0)
     system_prompt = load_system_prompt()
     OUTPUT_DIR.mkdir(exist_ok=True)
 
