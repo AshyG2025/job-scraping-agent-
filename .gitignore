@@ -20,6 +20,10 @@
 *.pem
 *.key
 
+# Claude Code per-machine config (project-shared config goes in .claude/settings.json
+# and .claude/commands/; the .local suffix is for personal/per-machine overrides)
+.claude/settings.local.json
+
 # Python (for Session 2 code)
 __pycache__/
 *.py[cod]

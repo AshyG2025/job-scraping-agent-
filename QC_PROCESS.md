@@ -73,11 +73,26 @@ b. **Read the calibration table** — what % of each score band converted to rec
 
 c. **Review the score-vs-outcome conflicts list** — roles where outcome strongly contradicted score (8 → instant reject, or 5 → interview offer). For each:
    - Fill in `score_in_hindsight` (what would you score it now?)
-   - Mark `add_to_eval_set` Yes/No — promote to gold standard if the outcome is decisive
+   - Mark `add_to_eval_set` Yes/No — promote to gold standard if the outcome is decisive (the surface signal for 5e — see below)
    
-   *This is the highest-value tuning move you can make. Adding 1–2 outcome-validated examples per month grows your eval set from 6 synthetic to 50+ real-world over 6 months.*
+   *This is the highest-value tuning move you can make. Adding 1–2 outcome-validated examples per month grows your eval set from 9 synthetic to 50+ real-world over 6 months.*
 
 d. **Read the response-vs-rejection cohort lists** — top 5 recent recruiter responses + top 5 recent rejections side-by-side. What do the responders have in common that the rejected ones don't? Often a pattern the rubric doesn't yet weight (e.g., "all responders were post-Series-D" or "all rejections required >10 yrs").
+
+e. **Promote rows flagged in 5c into the eval set** — the procedural loop that turns a Sheet flag into a calibrated gold-standard entry. For every row where `outcome_status` changed since last QC (filter the Sheet by `outcome_date` >= last QC date) OR `add_to_eval_set` is set to `Yes`:
+
+   1. **Surface the row** — company, title, `score_at_application`, current `outcome_status`, `score_in_hindsight` (if filled). Cite the Sheet row number for traceability.
+   2. **Ask "promote as a [N]-anchor?" — never auto-promote.** Suggested anchor by outcome:
+      - `recruiter_response` / `phone_screen` → **9** (callback-anchor convention — Wise Treasury / Liberis / Snorkel / Wise Cards Pay-in template; the JD-vs-profile read may already land at 8 or 9, the +1 outcome anchor lifts `final_score` only)
+      - `interview` → **9** with per-dim bumps on Skills + Team needs (Liberis upgrade pattern, where each interview-validated dim moves +1)
+      - `offer` → **10** (the top anchor — only after a real offer letter)
+      - `rejection-after-strong-signal` (e.g., scored 8, rejected at first screen with no asked-for-feedback) → match `score_in_hindsight`. **These are inversion data points — the most valuable single-source for tuning.**
+   3. **If yes:** append a new Posting section to `docs/EVAL_SET.md` (matching the existing structure: per-dim targets + reasoning + verdict + resume choice + H1B + lead-with). For callback-anchored entries, add a "Callback context" line per the convention. Then append the JD body to `docs/EVAL_SET_JDS.md` (frozen snapshot — never edit after).
+   4. **Re-run the eval set immediately** — `cat docs/EVAL_SET_JDS.md >> MANUAL_JDS.md && python scripts/score_jobs.py` (~$0.12 per new entry). Compare each new entry's score to its target:
+      - Δ ≤ 1 → calibrated. Move on.
+      - Δ > 1 → it's an inversion data point. **Don't tune the prompt mid-QC.** Log under Action items (Step 6) as a `SCORING_PROMPT.md` tuning candidate; address in a separate session per the eval-set + version-bump convention.
+
+   *This loop grows the eval set from 9 synthetic anchors to 50+ outcome-validated anchors over 6–12 months. Skipping it leaves the matcher calibrated against the original seed set even as you build real application history. **It is also the foundational data that V2's few-shot SCORING_PROMPT.md examples will draw from at the 50+ outcome milestone.***
 
 ### 6. Action items (~3 min)
 At the bottom of the report, write any actions for the next month based on what you saw in steps 2–5. Examples:

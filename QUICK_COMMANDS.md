@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-05-08 (Apify LinkedIn discovery channel shipped — added `apify-client` install + token verification + cost-per-run note to Python pipeline section)
+> **Last updated:** 2026-05-11 (Added `/analyze-jd` slash command — recruiter-grade deep JD analysis, distinct from the lightweight `score_jobs.py` matcher. Section "Telling Claude what to do" gets the new entry.)
 
 ---
 
@@ -32,6 +32,7 @@
 | Trigger the calibration deep-dive ritual | *"Run the calibration deep-dive playbook with me. The monthly QC flagged {inversion type}. Walk me through it step by step."* |
 | Add a company to the list | *"Add {Company} to COMPANY_LIST.md as Tier {N}, geo {Seattle/SF/London/Multiple}, H1B {✅/⚠️/❌}."* |
 | Score a single role manually | *"Score this posting against my scoring prompt: {paste JD}. Use the JSON output schema from SCORING_PROMPT.md."* |
+| **Deep recruiter-grade analysis of one JD** (vs the lightweight matcher) | `/analyze-jd <paste JD text or URL>` — produces the 6-section structured brief (Experience Level / Domain Alignment / per-skill ✓✓✓ table / Team Needs with Manageable-Non-issue-Dealbreaker tiers / Role Type Fit / Recommendation). Lives in `.claude/commands/analyze-jd.md`. Use on shortlisted roles only (~$0.30-0.50 per analysis). Catches role-type-mismatch JDs the lightweight matcher misses (Acuity-Analytics-style). |
 | Draft a tailored resume / cover letter for a role | *"Open {role link or paste JD}. Pick the right base resume per PROJECT_BRIEF.md, draft the bullet tweaks, and save the result in `_drafts/{Company}-resume.md` so it stays local."* |
 | Have Claude commit + push project changes | *"Commit these changes with a message describing what shipped, and push to GitHub."* |
 | Verify Claude isn't drifting on accuracy | *"For everything in your last response, cite the source — file path, URL, or memory entry. Flag anything you can't source."* |

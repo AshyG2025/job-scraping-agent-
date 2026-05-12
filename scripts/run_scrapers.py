@@ -47,11 +47,17 @@ SOURCES = [
     {"company": "Marqeta",    "ats": "greenhouse", "slug": "marqeta"},
     {"company": "Mercury",    "ats": "greenhouse", "slug": "mercury"},
     {"company": "Monzo",      "ats": "greenhouse", "slug": "monzo"},
+    {"company": "Snorkel.AI", "ats": "greenhouse", "slug": "snorkelai"},   # added 2026-05-11; HM-callback Tier 1; slug confirmed via API + careers-page embed
     {"company": "Stripe",     "ats": "greenhouse", "slug": "stripe"},
     # Tier 2
     {"company": "Affirm",     "ats": "greenhouse", "slug": "affirm"},
     {"company": "Block",      "ats": "greenhouse", "slug": "block"},        # migrated off SmartRecruiters; ex-`Square` tenant is dormant
-    {"company": "Coinbase",   "ats": "greenhouse", "slug": "coinbase"},
+    # Coinbase: Greenhouse slug `coinbase` returned 404 starting 2026-05-08 (slug retired).
+    # Re-recon 2026-05-11 found no working endpoint on Greenhouse / Lever / Ashby / SmartRecruiters.
+    # Workday tenants (`coinbase` wd1/wd5, `coinbasecorp` wd1, `coinbase` wd103) all return cryptic 422s
+    # — endpoint exists but `site` value unknown without inside knowledge. jobs.coinbase.com is
+    # Cloudflare-blocked (403 even with browser headers). Fallback: LinkedIn Apify discovery channel
+    # surfaces Coinbase roles; that's the active path until we get the right Workday `site` value.
     {"company": "Databricks", "ats": "greenhouse", "slug": "databricks"},
     {"company": "Modulr",     "ats": "greenhouse", "slug": "modulrfinance"},  # company is "Modulr"; legal name "Modulr Finance"
     {"company": "Tide",       "ats": "greenhouse", "slug": "tide"},
@@ -103,9 +109,14 @@ SOURCES = [
     },
 ]
 
-# Note on Checkout.com: re-reconned to Workday (tenant `checkout`/site `CheckoutCareers`)
-# but tenant was in transient maintenance at recon. Add to the Workday block above
-# only after a live CXS-endpoint probe confirms it's serving.
+# Note on Checkout.com: re-probed 2026-05-11 with the proper Workday CXS payload
+# (`appliedFacets`/`searchText`). Results: `checkout` wd1/wd5/wd103 all return cryptic 422
+# (endpoint exists but the `site` value is unknown — tried CheckoutCareers / External /
+# CheckoutCom / Careers / Checkout, all 422); `checkout` wd3 returns 403 (auth-gated);
+# `careers.checkout.com` connection-failed (HTTP 000); no working endpoint found on
+# Greenhouse / Lever / Ashby / SmartRecruiters. Like Coinbase, this is a dead-end via blind
+# probing — needs inside knowledge of the Workday `site` value, or LinkedIn Apify discovery
+# (which already covers London) as the fallback. Re-probe at next monthly QC.
 
 ATS_MODULES = {
     "greenhouse": greenhouse,
