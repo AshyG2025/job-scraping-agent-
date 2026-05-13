@@ -148,7 +148,8 @@ The Google Sheet keeps a running log of every role ever surfaced (so I don't see
 | ...broaden / narrow the geo | Edit the geo allowlist in `HARD_FILTERS.md` |
 | ...change what scoring weighs | Edit `SCORING_PROMPT.md` |
 | ...change my resume | Update files in `Ayesha Resume/` and re-state which leads what in `PROJECT_BRIEF.md` |
-| ...change cadence / digest delivery | Edit `.github/workflows/scrape.yml` (the GitHub Actions schedule) |
+| ...change cron schedule | Edit the `cron:` line in `.github/workflows/scrape.yml`; use https://crontab.guru/ to translate. Remember: GitHub Actions cron is UTC. |
+| ...disable the cron temporarily | Comment out the `cron:` line in `.github/workflows/scrape.yml`, commit, push. The manual trigger (Actions tab → Run workflow) still works. |
 
 ---
 
@@ -187,6 +188,6 @@ The matcher will drift — Claude API gets updated, you'll edit the brief, real-
 
 🟢 **Phase D — email digest shipped** (Session 3.5) — `scripts/send_digest.py` reads `_local/scored_results.json` (Phase A's output), filters to roles ≥6/10 (configurable via `DIGEST_SCORE_THRESHOLD`), and sends a plain-text email via Resend's REST API with two sections (Strong ≥8, Moderate 6–7). Each role shows score / verdict / per-dim breakdown / 1-line reason / H1B note / apply URL; top of email links to the Google Sheet. Diagnostic at `scripts/check_resend.py`; setup walkthrough in `docs/PHASE_D_SETUP.md` (~5 min, 4 steps). Asset-match snippets intentionally deferred to V2 Resume Agent. Standalone script (not auto-fired from `score_jobs.py`) so it can be re-sent without re-scoring.
 
-🟡 **Phase E — GitHub Actions cron** — not yet built. Tue + Thu mornings PT (highest job-posting volume days). Phase-E activation is also when scraper-volume monitoring becomes worth more than a glance per `QC_PROCESS.md`.
+🟢 **Phase E — GitHub Actions cron shipped** (Session 3.6) — `.github/workflows/scrape.yml` runs the full pipeline (`run_scrapers.py && score_jobs.py && send_digest.py`) on cron `0 17 * * 2,4` (9am PT Tue + Thu year-round; drifts to 10am during PDT). Also exposes a manual `workflow_dispatch:` trigger via the Actions tab for ad-hoc runs. State persistence via `actions/cache@v4` for `_local/scraped_seen.json` (Phase B dedup) + `_local/last_sent_digest.json` (Phase D re-send guard) — without it, every Tuesday's run would re-surface roles surfaced last Thursday. `concurrency:` block prevents overlap so concurrent runs don't race on the shared Sheet. Failures email the repo owner via GitHub's default. Per-run output (digest.md + scored_results.json) uploaded as a 14-day artifact for post-mortem. Setup walkthrough at `docs/PHASE_E_SETUP.md` (~10 min: 7 GitHub secrets via web UI + a manual trigger to verify). Cost: $0 added (GitHub Actions free tier covers ~120 min/mo we'll use, well under 2K cap).
 
 🔵 **V2 (after V1 phases close)** — outcome-driven few-shot examples in `SCORING_PROMPT.md` once 50+ application outcomes have accumulated; a dedicated **Resume & Cover Letter Expert Agent** (ATS-focused, authenticity-bounded, intentional-tweaks framing) that replaces the current bullet-tweak suggestions with a properly drafted tailored resume + cover letter; LinkedIn parsing for hiring managers / recruiters of prioritized roles; Notion as primary view.

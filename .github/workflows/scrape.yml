@@ -1,0 +1,123 @@
+# What this workflow does — Phase E cron orchestrator.
+#
+# On every Tuesday + Thursday at 17:00 UTC (= 9am PT year-round; will drift
+# to 10am during PDT, accepted), runs the full V1 pipeline end-to-end:
+#   1. Restore _local/ cache (scraped_seen.json + last_sent_digest.json)
+#   2. python scripts/run_scrapers.py     → scrapes 32 named cos + 3 LinkedIn searches
+#   3. python scripts/score_jobs.py       → scores via Claude API + writes Sheet
+#   4. python scripts/send_digest.py      → emails roles ≥6/10 to recipient
+#   5. Save updated _local/ cache
+#   6. Upload digest.md + scored_results.json as artifacts (for post-mortem)
+#
+# Can also be triggered manually from the Actions tab (workflow_dispatch). Useful
+# for one-off testing without waiting for the cron — e.g., after adding new
+# companies to COMPANY_LIST.md or changing SCORING_PROMPT.md.
+#
+# Failures email the repo owner (GitHub default — no extra config needed).
+# The pipeline scripts are designed to fail loud on real errors (bad JSON,
+# Resend HTTP error, etc.); transient ATS failures are logged but don't crash.
+#
+# All 7 required secrets must be set under Settings → Secrets and variables →
+# Actions before this workflow can run end-to-end. See docs/PHASE_E_SETUP.md.
+
+name: Job scraper — Tue/Thu morning
+
+on:
+  schedule:
+    # 17:00 UTC Tue (2) + Thu (4) = 9am PT in winter, 10am PT in summer
+    - cron: "0 17 * * 2,4"
+  workflow_dispatch: {}
+
+# If a previous cron run is still in flight when the next one fires (or when
+# someone clicks "Run workflow"), let the in-flight one finish and queue this
+# one — don't cancel mid-run. The pipeline writes to a shared Google Sheet, so
+# concurrent runs would race.
+concurrency:
+  group: scrape-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Apify LinkedIn step alone can take ~5-8 min; full pipeline ~15 min
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Restore the Phase B dedup cache (so Tuesday's run doesn't re-surface
+      # roles surfaced last Thursday) AND the Phase D re-send guard marker
+      # (so we don't double-email if a manual trigger fires right after a
+      # successful cron run). Cache key is unique per run so saves never
+      # collide; restore-keys catches the most recent prior save by prefix.
+      - name: Restore _local/ runtime state
+        uses: actions/cache@v4
+        with:
+          path: |
+            _local/scraped_seen.json
+            _local/last_sent_digest.json
+          key: scrape-state-${{ github.run_id }}
+          restore-keys: |
+            scrape-state-
+
+      # Phase C requires the Google Sheets service account JSON as a file at
+      # the path GOOGLE_SHEETS_KEY_PATH points to. We write it from the
+      # GOOGLE_SHEETS_KEY_JSON secret at runtime (the secret stores the file's
+      # contents directly, since GitHub secrets are strings only). Note: this
+      # creates the file inside the runner — never committed, scoped to this run.
+      - name: Write Google Sheets service-account key
+        run: |
+          mkdir -p _local
+          printf '%s' "$GOOGLE_SHEETS_KEY_JSON" > _local/google_sheets_key.json
+        env:
+          GOOGLE_SHEETS_KEY_JSON: ${{ secrets.GOOGLE_SHEETS_KEY_JSON }}
+
+      # All scripts use python-dotenv's load_dotenv() but also fall back to
+      # os.environ when .env isn't present. We pass secrets via env: blocks
+      # rather than writing a .env file — same behavior, no temp file to clean.
+      - name: Run scrapers (Phase B)
+        env:
+          APIFY_API_TOKEN: ${{ secrets.APIFY_API_TOKEN }}
+        run: python scripts/run_scrapers.py
+
+      - name: Score jobs (Phase A + Phase C Sheet write)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_SHEETS_KEY_PATH: _local/google_sheets_key.json
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+        run: python scripts/score_jobs.py
+
+      - name: Send email digest (Phase D)
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DIGEST_RECIPIENT_EMAIL: ${{ secrets.DIGEST_RECIPIENT_EMAIL }}
+          DIGEST_FROM_EMAIL: ${{ secrets.DIGEST_FROM_EMAIL }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+        run: python scripts/send_digest.py
+
+      # Upload the run's digest + scored results so the user can download them
+      # from the Actions UI for post-mortem (e.g., why did Tuesday's run produce
+      # 0 strong matches? Or why did the matcher score X a 4 instead of an 8?).
+      # Retention=14d keeps storage modest; older runs auto-delete.
+      - name: Upload run artifacts
+        if: always()  # Upload even if a previous step failed — debugging needs them
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-output-${{ github.run_id }}
+          path: |
+            _local/digest.md
+            _local/scored_results.json
+          retention-days: 14
+          if-no-files-found: warn  # Don't fail the workflow if the pipeline didn't get far enough to produce these

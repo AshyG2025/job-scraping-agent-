@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-05-12 (Phase D shipped: new `python scripts/send_digest.py` (with `--dry-run`) + `python scripts/check_resend.py` diagnostic. Tue/Thu one-liner now chains `&& python scripts/send_digest.py`. Earlier 2026-05-11 — Added `/analyze-jd` slash command — recruiter-grade deep JD analysis, distinct from the lightweight `score_jobs.py` matcher.)
+> **Last updated:** 2026-05-12 (Phase E — GitHub Actions cron shipped. New entries in "Git & GitHub" section: manual cron trigger via Actions tab, viewing past runs, downloading artifacts, disabling the cron. Earlier 2026-05-12 — Phase D shipped: new `python scripts/send_digest.py` (with `--dry-run`) + `python scripts/check_resend.py` diagnostic. Tue/Thu one-liner now chains `&& python scripts/send_digest.py`. Earlier 2026-05-11 — Added `/analyze-jd` slash command — recruiter-grade deep JD analysis, distinct from the lightweight `score_jobs.py` matcher.)
 
 ---
 
@@ -64,6 +64,10 @@
 | Show your public SSH key | `cat ~/.ssh/id_ed25519.pub` | Safe to share — public is in the name |
 | Copy public SSH key to clipboard | `pbcopy < ~/.ssh/id_ed25519.pub` | Mac-only |
 | Verify git is using Xcode's binary (not the broken stub) | `which git` should print `/Applications/Xcode.app/Contents/Developer/usr/bin/git` | If it shows `/usr/bin/git`, the PATH in `~/.zshrc` was reset — re-add the export |
+| Manually trigger the Phase E cron (don't wait for Tuesday) | Open https://github.com/AshyG2025/job-scraping-agent-/actions → "Job scraper — Tue/Thu morning" → "Run workflow" | Useful after editing `COMPANY_LIST.md` / `SCORING_PROMPT.md` to verify changes work in CI before the next scheduled run |
+| See past cron runs (success/failure history) | Open https://github.com/AshyG2025/job-scraping-agent-/actions | Each run shows duration, which step failed, and links to live logs |
+| Download a past run's `digest.md` + `scored_results.json` | Actions → click a run → Artifacts section at the bottom → `pipeline-output-<run-id>` | 14-day retention. Useful for "why did Tuesday's run produce 0 strong matches?" post-mortems |
+| Temporarily disable the cron (still allows manual triggers) | Edit `.github/workflows/scrape.yml`, comment out the `- cron: "0 17 * * 2,4"` line, commit, push | Re-enable by uncommenting; manual `workflow_dispatch` trigger still works while disabled |
 
 ---
 
@@ -84,7 +88,7 @@
 
 ---
 
-## 🐍 Python pipeline (Phases A + B + C + D)
+## 🐍 Python pipeline (Phases A + B + C + D + E)
 
 | When you want to... | Run / say... | Notes |
 |---|---|---|
@@ -100,6 +104,7 @@
 | Verify the Apify token + LinkedIn actor | `python -c "from dotenv import load_dotenv; import os; load_dotenv(); from apify_client import ApifyClient; print(ApifyClient(token=os.environ['APIFY_API_TOKEN']).actor('curious_coder/linkedin-jobs-scraper').get()['name'])"` | Should print `linkedin-jobs-scraper`. Use after rotating the token or if `run_scrapers.py` stops returning LinkedIn results. |
 | Re-do the Phase C setup (key rotation, new machine, etc.) | Open `docs/PHASE_C_SETUP.md` | The 9-step walkthrough is the canonical path. Time: ~10–15 min. |
 | Re-do the Phase D setup (Resend key rotation, new recipient, etc.) | Open `docs/PHASE_D_SETUP.md` | 4-step walkthrough. Time: ~5 min. |
+| Re-do the Phase E setup (rotating GitHub secrets, new contributor onboarding) | Open `docs/PHASE_E_SETUP.md` | 4-step walkthrough. Time: ~10 min. |
 | Deactivate the venv | `deactivate` | Drops the `(.venv)` prefix; reverts to system Python. |
 
 ---
