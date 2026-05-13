@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-05-11 (Added `/analyze-jd` slash command — recruiter-grade deep JD analysis, distinct from the lightweight `score_jobs.py` matcher. Section "Telling Claude what to do" gets the new entry.)
+> **Last updated:** 2026-05-12 (Phase D shipped: new `python scripts/send_digest.py` (with `--dry-run`) + `python scripts/check_resend.py` diagnostic. Tue/Thu one-liner now chains `&& python scripts/send_digest.py`. Earlier 2026-05-11 — Added `/analyze-jd` slash command — recruiter-grade deep JD analysis, distinct from the lightweight `score_jobs.py` matcher.)
 
 ---
 
@@ -84,7 +84,7 @@
 
 ---
 
-## 🐍 Python pipeline (Phases A + B)
+## 🐍 Python pipeline (Phases A + B + C + D)
 
 | When you want to... | Run / say... | Notes |
 |---|---|---|
@@ -92,10 +92,14 @@
 | Activate the venv in a new terminal session | `source .venv/bin/activate` | Prefix changes to `(.venv)` to confirm. Needed before every run. |
 | Run the auto-scrapers (~30 named cos + 3 LinkedIn searches) | `python scripts/run_scrapers.py` | Hits each named-co's ATS API + runs Apify actor for the 3 LinkedIn URLs, applies title/geo/age filters, dedupes against `_local/scraped_seen.json`, appends new JDs to `MANUAL_JDS.md`. Prints a per-source funnel summary. ~6–10 min total (Apify is the slow leg at 1–3 min per LinkedIn search). |
 | Score whatever's in `MANUAL_JDS.md` | `python scripts/score_jobs.py` | Output: `_local/digest.md` + `_local/scored_results.json` + appended rows in your Google Sheet. Reads `ANTHROPIC_API_KEY` from `.env`. |
-| Full pipeline (scrape → score → Sheet) | `python scripts/run_scrapers.py && python scripts/score_jobs.py` | Tuesday/Thursday-morning one-liner. ~10–15 min + ~$1.20/run (~$1 Anthropic + ~$0.20 Apify). |
+| Full pipeline (scrape → score → Sheet → email) | `python scripts/run_scrapers.py && python scripts/score_jobs.py && python scripts/send_digest.py` | Tuesday/Thursday-morning one-liner. ~10–15 min + ~$1.20/run (~$1 Anthropic + ~$0.20 Apify; Resend is free under 3K emails/mo). |
+| Send the email digest of the last scoring run | `python scripts/send_digest.py` | Reads `_local/scored_results.json`, filters to roles ≥6/10 (override via `DIGEST_SCORE_THRESHOLD` in `.env`), emails to `DIGEST_RECIPIENT_EMAIL`. Skips emailing when 0 roles meet threshold. |
+| Preview the email body without sending | `python scripts/send_digest.py --dry-run` | Prints subject + body to terminal. Use to sanity-check formatting before sending. |
 | Verify the Google Sheet connection | `python scripts/check_sheets.py` | Prints `✅ Connected. Sheet title: ...` on success. Run after Phase C setup or any time scoring stops writing to the Sheet. |
+| Verify Resend (email) is wired | `python scripts/check_resend.py` | Sends one short test email to `DIGEST_RECIPIENT_EMAIL`. Run after Phase D setup or any time `send_digest.py` stops delivering. |
 | Verify the Apify token + LinkedIn actor | `python -c "from dotenv import load_dotenv; import os; load_dotenv(); from apify_client import ApifyClient; print(ApifyClient(token=os.environ['APIFY_API_TOKEN']).actor('curious_coder/linkedin-jobs-scraper').get()['name'])"` | Should print `linkedin-jobs-scraper`. Use after rotating the token or if `run_scrapers.py` stops returning LinkedIn results. |
 | Re-do the Phase C setup (key rotation, new machine, etc.) | Open `docs/PHASE_C_SETUP.md` | The 9-step walkthrough is the canonical path. Time: ~10–15 min. |
+| Re-do the Phase D setup (Resend key rotation, new recipient, etc.) | Open `docs/PHASE_D_SETUP.md` | 4-step walkthrough. Time: ~5 min. |
 | Deactivate the venv | `deactivate` | Drops the `(.venv)` prefix; reverts to system Python. |
 
 ---
