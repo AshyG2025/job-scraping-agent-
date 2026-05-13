@@ -28,17 +28,17 @@ The "personal job search" framing is the demo — the interesting part is the pl
 ```
                             ┌──────────────────────────┐
                             │   Schedule trigger       │
-                            │   Tue + Thu (+ optional  │
-                            │   Sat) at 7am PT         │
+                            │   Tue + Thu at 9am PT    │
+                            │   (year-round, UTC 17:00)│
                             │   via GitHub Actions     │
                             └────────────┬─────────────┘
                                          ▼
    ┌─────────────────────┐    ┌─────────────────────────┐
    │  TARGETED scrapers  │    │  DISCOVERY scrapers     │
-   │  ~50–70 named       │    │  LinkedIn + TrueUp +    │
-   │  company career     │    │  YC Work at a Startup + │
-   │  pages              │    │  VC portfolio boards    │
-   │  (custom code)      │    │  (Apify + custom)       │
+   │  32 named cos       │    │  LinkedIn (3 geo        │
+   │  (Greenhouse,       │    │  searches via Apify)    │
+   │  Workday, Ashby,    │    │  [V2: TrueUp, YC,       │
+   │  SmartRecruiters)   │    │  VC portfolios]         │
    └──────────┬──────────┘    └──────────┬──────────────┘
               │                          │
               └──────────────┬───────────┘
