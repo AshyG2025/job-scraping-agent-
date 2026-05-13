@@ -42,6 +42,7 @@ SOURCES = [
     {"company": "Boku",       "ats": "greenhouse", "slug": "boku"},
     {"company": "Brex",       "ats": "greenhouse", "slug": "brex"},
     {"company": "DoorDash",   "ats": "greenhouse", "slug": "doordashusa"},   # bare `doordash` 404s
+    {"company": "Ebury",      "ats": "greenhouse", "slug": "ebury"},        # added 2026-05-12; London FX/payments fintech, ~240 jobs total (geo filter trims hard)
     {"company": "GoCardless", "ats": "greenhouse", "slug": "gocardless"},
     {"company": "Liberis",    "ats": "greenhouse", "slug": "liberis"},
     {"company": "Marqeta",    "ats": "greenhouse", "slug": "marqeta"},
@@ -83,6 +84,8 @@ SOURCES = [
     # Tier 1
     {"company": "Deliveroo",    "ats": "ashby", "slug": "deliveroo"},     # migrated off Greenhouse 2026-05-01
     {"company": "Ramp",         "ats": "ashby", "slug": "ramp"},
+    # Tier 2
+    {"company": "Multiverse",   "ats": "ashby", "slug": "multiverse"},    # added 2026-05-12; UK apprenticeship platform, ~38 jobs
 
     # ---- LinkedIn (Apify) — DISCOVERY channel ----
     # Each entry = one LinkedIn /jobs/search URL built in incognito Chrome
@@ -107,6 +110,7 @@ SOURCES = [
         "search_url": "https://www.linkedin.com/jobs/search/?keywords=Product%20Manager&location=London%2C%20England%2C%20United%20Kingdom&f_TPR=r2592000&f_E=4&f_JT=F&sortBy=DD",
         "max_results": 67,
     },
+
 ]
 
 # Note on Checkout.com: re-probed 2026-05-11 with the proper Workday CXS payload
@@ -117,6 +121,18 @@ SOURCES = [
 # Greenhouse / Lever / Ashby / SmartRecruiters. Like Coinbase, this is a dead-end via blind
 # probing — needs inside knowledge of the Workday `site` value, or LinkedIn Apify discovery
 # (which already covers London) as the fallback. Re-probe at next monthly QC.
+#
+# Note on American Express: probed 2026-05-12 against Greenhouse / Lever / Ashby /
+# SmartRecruiters (all 404 or empty placeholder) and Workday tenants `americanexpress` +
+# `amex` × wd1/wd5/wd103/wd3 × 5 candidate `site` values (External / Careers /
+# AmexCareers / AmericanExpress / americanexpress) — all return cryptic 422
+# (endpoint exists but `site` value unknown without inside knowledge). The careers
+# page at careers.americanexpress.com (HTTP 200) is JS-rendered and reveals no
+# Workday URL in HTML. Same dead-end pattern as Coinbase / Checkout.com. Fallback:
+# Apify LinkedIn discovery — Amex has SF Bay + London tech offices, so SF Bay and
+# London search channels will surface their roles. (NYC is not in our LinkedIn
+# search set; if NYC becomes geo-relevant, add a 4th LinkedIn search.) Re-probe
+# at next monthly QC; Workday `site` values do occasionally surface in HR-tech blogs.
 
 ATS_MODULES = {
     "greenhouse": greenhouse,
