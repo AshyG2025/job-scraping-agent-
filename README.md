@@ -4,6 +4,8 @@ A scheduled agent that scours job boards and company career pages for **Senior /
 
 This is a personal project for **Ayesha Ghoshal** — currently Sr. PM-Tech (L6) at Amazon, looking for the next Platform PM role in Seattle / SF Bay / London.
 
+> 🟢 **V1 status:** all 5 phases shipped (Sessions 2.0 → 3.6). Pipeline runs hands-off via GitHub Actions every Tuesday + Thursday at 9am PT — scrapes 32 named-company career pages + 3 LinkedIn discovery channels, scores survivors via Claude API, writes to a Google Sheet, and emails the digest. Per-phase detail in the [Status](#status) section below.
+
 ---
 
 ## Why this is interesting from a platform-PM lens
@@ -177,6 +179,8 @@ The matcher will drift — Claude API gets updated, you'll edit the brief, real-
 - **Inverted-calibration deep dive** — if the calibration table ever shows lower bands converting *higher* than higher bands (rubric is fundamentally broken), the QC report flips to 🚨 mode and links to `docs/CALIBRATION_DEEP_DIVE.md` — a structured 60–90 min playbook to run with Claude Code to find the root cause and ship a tested fix.
 
 ## Status
+
+🟢 **V1 complete — all 5 pipeline phases shipped (A → E).** Spec layer + Phase A scoring runner + Phase B 32-co scraper + Phase C Sheets storage + Phase D Resend digest + Phase E GitHub Actions cron. The pipeline runs hands-off Tue + Thu mornings; the V2 slate (Resume Agent + outcome-driven scoring + LinkedIn parsing for HMs / recruiters) starts after V1 has accumulated enough application outcomes to inform calibration.
 
 🟢 **Spec layer complete** (Sessions 1 + 1.5–1.7) — all spec docs shipped: `PROJECT_BRIEF`, `COMPANY_LIST`, `HARD_FILTERS`, `SCORING_PROMPT`, `APPLICATION_LOG`, `QC_PROCESS`, `docs/EVAL_SET`, `docs/EVAL_SET_JDS`, `docs/CALIBRATION_DEEP_DIVE`, `docs/qc-reports/TEMPLATE`, plus `TABLE_OF_CONTENTS` and `QUICK_COMMANDS`.
 
