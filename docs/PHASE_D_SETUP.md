@@ -82,6 +82,7 @@ Check your inbox. The test email's subject is `[Job Matcher] Test email — Phas
 - `❌ RESEND_API_KEY missing from .env` → re-check Step 3; make sure no quotes around the key value, no trailing whitespace
 - `❌ Resend returned HTTP 401` → API key is wrong/revoked; create a new one in Step 2
 - `❌ Resend returned HTTP 422` → recipient email is malformed; double-check `DIGEST_RECIPIENT_EMAIL`
+- `❌ Resend returned HTTP 403: ... You can only send testing emails to your own email address (xxx@gmail.com)` → **Resend gotcha**: when using the default `onboarding@resend.dev` sender, Resend only lets you send to the email address you signed up with (a spam-prevention measure). Either (a) change `DIGEST_RECIPIENT_EMAIL` to that address, (b) re-signup at Resend with the address you actually want to receive at, or (c) verify your own domain (Optional section below). Option (a) + a Gmail forwarding rule is the fastest unblock if you want digests in a different inbox.
 
 ---
 
