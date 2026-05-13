@@ -15,8 +15,17 @@ What this file does, in plain English:
      instead of mailing an empty digest).
 
 Standalone CLI:
-    python scripts/send_digest.py            # send
-    python scripts/send_digest.py --dry-run  # print body to stdout, don't send
+    python scripts/send_digest.py            # send (skipped if already sent for this scoring run)
+    python scripts/send_digest.py --dry-run  # print body to stdout, don't send, don't update marker
+    python scripts/send_digest.py --force    # bypass the already-sent guard
+
+Idempotency: after a successful send, writes _local/last_sent_digest.json
+with the scored_results.json mtime + Resend ID. The next run compares the
+current mtime against the marker and skips if scored_results.json hasn't
+changed since (i.e., score_jobs.py hasn't run since the last digest). This
+prevents accidentally re-emailing the same digest if the chained one-liner
+is run twice or if score_jobs.py errored mid-pipeline. Pass --force to
+override (e.g., recipient never received the first send).
 
 Reads from .env:
     RESEND_API_KEY            (required for actual send)
@@ -47,11 +56,16 @@ from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SCORED_RESULTS_PATH = PROJECT_ROOT / "_local" / "scored_results.json"
+LAST_SENT_MARKER_PATH = PROJECT_ROOT / "_local" / "last_sent_digest.json"
 DEFAULT_FROM = "Job Matcher <onboarding@resend.dev>"
 DEFAULT_THRESHOLD = 6
 RESEND_URL = "https://api.resend.com/emails"
 
 VERDICT_CHIP = {"prioritize": "🟢", "apply": "🟡", "weak": "⚪"}
+
+
+def _is_valid_apply_url(url: str | None) -> bool:
+    return isinstance(url, str) and url.startswith(("http://", "https://"))
 
 
 def render_role(r: dict[str, Any], idx: int) -> str:
@@ -68,8 +82,10 @@ def render_role(r: dict[str, Any], idx: int) -> str:
     ]
     if r.get("h1b_note"):
         lines += ["", f"   H1B note: {r['h1b_note']}"]
-    if r.get("posting_url"):
+    if _is_valid_apply_url(r.get("posting_url")):
         lines += ["", f"   Apply: {r['posting_url']}"]
+    else:
+        lines += ["", "   Apply: (no public URL — see MANUAL_JDS.md or the Sheet for full JD)"]
     return "\n".join(lines)
 
 
@@ -128,9 +144,42 @@ def send_via_resend(api_key: str, sender: str, recipient: str, subject: str, bod
     return resp.json()
 
 
+def _score_or_zero(r: dict[str, Any]) -> int:
+    """Coerce missing / null final_score to 0 so filter + sort can't crash on
+    a malformed Claude response or a parser-fallback entry."""
+    s = r.get("final_score")
+    return s if isinstance(s, int) else 0
+
+
+def _read_last_sent_marker() -> dict | None:
+    if not LAST_SENT_MARKER_PATH.exists():
+        return None
+    try:
+        with open(LAST_SENT_MARKER_PATH) as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+def _write_last_sent_marker(scored_mtime: float, n_roles: int, resend_id: str) -> None:
+    LAST_SENT_MARKER_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(LAST_SENT_MARKER_PATH, "w") as f:
+        json.dump(
+            {
+                "sent_at": datetime.now().isoformat(timespec="seconds"),
+                "scored_results_mtime": scored_mtime,
+                "n_roles_in_email": n_roles,
+                "resend_id": resend_id,
+            },
+            f,
+            indent=2,
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Send Phase D email digest of scored roles.")
     parser.add_argument("--dry-run", action="store_true", help="Print subject + body to stdout instead of sending")
+    parser.add_argument("--force", action="store_true", help="Send even if this scored_results.json was already emailed")
     args = parser.parse_args()
 
     load_dotenv()
@@ -139,13 +188,23 @@ def main() -> None:
         print(f"❌ {SCORED_RESULTS_PATH} not found. Run scripts/score_jobs.py first.", file=sys.stderr)
         sys.exit(1)
 
+    scored_mtime = SCORED_RESULTS_PATH.stat().st_mtime
+    last_sent = _read_last_sent_marker()
+    if not args.dry_run and not args.force and last_sent and scored_mtime <= last_sent.get("scored_results_mtime", 0):
+        print(
+            f"ℹ️  Skipping — this scoring run was already emailed at {last_sent.get('sent_at')} "
+            f"({last_sent.get('n_roles_in_email')} role(s)). "
+            f"Re-run scripts/score_jobs.py to produce new results, or pass --force to re-send."
+        )
+        return
+
     with open(SCORED_RESULTS_PATH) as f:
         all_roles = json.load(f)
 
     threshold = int(os.environ.get("DIGEST_SCORE_THRESHOLD", DEFAULT_THRESHOLD))
     survivors = sorted(
-        [r for r in all_roles if r.get("final_score", 0) >= threshold],
-        key=lambda r: -r["final_score"],
+        [r for r in all_roles if _score_or_zero(r) >= threshold],
+        key=lambda r: -_score_or_zero(r),
     )
 
     if not survivors:
@@ -171,7 +230,9 @@ def main() -> None:
         sys.exit(1)
 
     result = send_via_resend(api_key, sender, recipient, subject, body)
-    print(f"✅ Sent to {recipient} — Resend ID: {result.get('id', '?')}")
+    resend_id = result.get("id", "?")
+    _write_last_sent_marker(scored_mtime, len(survivors), resend_id)
+    print(f"✅ Sent to {recipient} — Resend ID: {resend_id}")
     print(f"   Subject: {subject}")
     print(f"   Roles in email: {len(survivors)} (threshold={threshold})")
 
