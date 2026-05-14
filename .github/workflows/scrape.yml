@@ -1,7 +1,8 @@
 # What this workflow does — Phase E cron orchestrator.
 #
-# On every Tuesday + Thursday at 17:00 UTC (= 9am PT year-round; will drift
-# to 10am during PDT, accepted), runs the full V1 pipeline end-to-end:
+# On every Tuesday + Thursday at 16:00 UTC (= 9am PDT in summer, 8am PST in
+# winter — the 1-hour winter drift is accepted), runs the full V1 pipeline
+# end-to-end:
 #   1. Restore _local/ cache (scraped_seen.json + last_sent_digest.json)
 #   2. python scripts/run_scrapers.py     → scrapes 32 named cos + 3 LinkedIn searches
 #   3. python scripts/score_jobs.py       → scores via Claude API + writes Sheet
@@ -24,8 +25,8 @@ name: Job scraper — Tue/Thu morning
 
 on:
   schedule:
-    # 17:00 UTC Tue (2) + Thu (4) = 9am PT in winter, 10am PT in summer
-    - cron: "0 17 * * 2,4"
+    # 16:00 UTC Tue (2) + Thu (4) = 9am PDT in summer, 8am PST in winter
+    - cron: "0 16 * * 2,4"
   workflow_dispatch: {}
 
 # If a previous cron run is still in flight when the next one fires (or when
