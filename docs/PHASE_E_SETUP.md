@@ -1,6 +1,8 @@
 # Phase E — GitHub Actions Cron Setup (one-time, ~10 min)
 
-> **What this is:** A walkthrough to enable the cron workflow that runs the full pipeline (`run_scrapers.py && score_jobs.py && send_digest.py`) automatically every Tuesday + Thursday at 9am PT. You set 7 secrets via the GitHub web UI once, then the cron runs hands-off forever.
+> **What this is:** A walkthrough to enable the cron workflow that runs the full pipeline (`run_scrapers.py && score_jobs.py && send_digest.py`) automatically every Tuesday + Thursday at 9am PT. You set 9 secrets via the GitHub web UI once, then the cron runs hands-off forever.
+>
+> **Note (2026-05-14):** Two of the 9 secrets — `PROJECT_BRIEF_MD` and `COMPANY_LIST_MD` — hold the *contents* of two markdown files that are gitignored locally (per CLAUDE.md Rule 7). Whenever you edit `PROJECT_BRIEF.md` or `COMPANY_LIST.md` locally, you must re-upload the corresponding secret or the cron will keep scoring against the stale version. The re-upload procedure is the same as the initial upload (Step 2 below).
 >
 > **What you'll end up with:** A working scheduled workflow at `.github/workflows/scrape.yml`. Every Tue + Thu morning, the runner spins up, scrapes, scores, writes to your Sheet, and emails you the digest. If anything fails, GitHub emails the repo owner automatically (no extra config).
 >
@@ -27,7 +29,7 @@ If GitHub asks you to log in or re-authenticate, do that first.
 
 ---
 
-## Step 2 — Add the 7 secrets
+## Step 2 — Add the 9 secrets
 
 Click **"New repository secret"** (green button, top-right of the Repository secrets section) once for each row below. For each: enter the **Name** exactly as shown (case-sensitive), paste the **Value** from your local `.env`, click **Add secret**.
 
@@ -40,6 +42,8 @@ Click **"New repository secret"** (green button, top-right of the Repository sec
 | 5 | `RESEND_API_KEY` | Copy from `.env` line `RESEND_API_KEY=…` | The `re_…` value |
 | 6 | `DIGEST_RECIPIENT_EMAIL` | Copy from `.env` line `DIGEST_RECIPIENT_EMAIL=…` | e.g., `danielsnora07@gmail.com` |
 | 7 | `DIGEST_FROM_EMAIL` | Copy from `.env` line `DIGEST_FROM_EMAIL=…` | e.g., `Job Matcher <onboarding@resend.dev>` |
+| 8 | `PROJECT_BRIEF_MD` | **Special** — see Step 3b below | The *contents* of local `PROJECT_BRIEF.md` (the file is gitignored, so it's pasted into a secret) |
+| 9 | `COMPANY_LIST_MD` | **Special** — see Step 3b below | The *contents* of local `COMPANY_LIST.md` (same reason as #8) |
 
 ---
 
@@ -57,7 +61,39 @@ Secret #3 above is different from the others — locally, `.env` has a *path* (`
 4. **Value:** Paste (Cmd+V). You should see a multi-line block starting with `{` and ending with `}`, containing fields like `"type"`, `"project_id"`, `"private_key"`, etc.
 5. Click **Add secret**
 
-**Verify:** The secrets page should now list 7 entries: `ANTHROPIC_API_KEY`, `APIFY_API_TOKEN`, `DIGEST_FROM_EMAIL`, `DIGEST_RECIPIENT_EMAIL`, `GOOGLE_SHEET_ID`, `GOOGLE_SHEETS_KEY_JSON`, `RESEND_API_KEY` (alphabetically sorted by GitHub).
+**Verify:** The secrets page should now list 7 entries: `ANTHROPIC_API_KEY`, `APIFY_API_TOKEN`, `DIGEST_FROM_EMAIL`, `DIGEST_RECIPIENT_EMAIL`, `GOOGLE_SHEET_ID`, `GOOGLE_SHEETS_KEY_JSON`, `RESEND_API_KEY` (alphabetically sorted by GitHub). After Step 3b you'll have 9 total.
+
+---
+
+## Step 3b — The two markdown-content secrets (PROJECT_BRIEF_MD + COMPANY_LIST_MD)
+
+Secrets #8 and #9 are like #3 — locally these are *files* (`PROJECT_BRIEF.md`, `COMPANY_LIST.md` at the repo root), but they're gitignored per CLAUDE.md Rule 7 (they contain your private strategic detail + named target companies). So we paste each file's *contents* into a secret, and the workflow writes them back to disk at runtime.
+
+For each of the two files, run from your project root:
+
+```
+pbcopy < PROJECT_BRIEF.md
+```
+
+then on the GitHub secrets page → **New repository secret** → Name `PROJECT_BRIEF_MD` → paste (Cmd+V) → **Add secret**.
+
+Repeat with:
+
+```
+pbcopy < COMPANY_LIST.md
+```
+
+→ Name `COMPANY_LIST_MD` → paste → **Add secret**.
+
+**Verify:** The secrets page should now list 9 entries total (7 from Step 2 + `COMPANY_LIST_MD` + `PROJECT_BRIEF_MD`).
+
+**Important — ongoing chore:** Whenever you edit `PROJECT_BRIEF.md` or `COMPANY_LIST.md` locally (adding a company, changing a tier, updating a flagship metric, etc.), re-run the matching `pbcopy < …` command and **update the corresponding secret** in GitHub:
+- Open the secret on the secrets page
+- Click **Update**
+- Paste the fresh contents
+- Click **Update secret**
+
+If you forget, the next cron run will score against the stale version of the file (silently — there's no warning). A reasonable habit: re-upload the secret in the same session you edit the local file.
 
 ---
 
@@ -74,6 +110,7 @@ Secret #3 above is different from the others — locally, `.env` has a *path* (`
    - ✅ Install dependencies
    - ✅ Restore _local/ runtime state
    - ✅ Write Google Sheets service-account key
+   - ✅ Write private context files from secrets
    - ✅ Run scrapers (Phase B)
    - ✅ Score jobs (Phase A + Phase C Sheet write)
    - ✅ Send email digest (Phase D)
@@ -106,6 +143,12 @@ The `ANTHROPIC_API_KEY` secret is wrong/revoked. Generate a new key at console.a
 
 **The run failed at "Score jobs" with a Google Sheets error:**
 Most likely the `GOOGLE_SHEETS_KEY_JSON` secret has malformed JSON (extra whitespace, trailing characters, missing braces). Re-do Step 3 — `pbcopy < _local/google_sheets_key.json` and paste fresh.
+
+**The run failed at "Score jobs" with `FileNotFoundError: PROJECT_BRIEF.md` or `COMPANY_LIST.md`:**
+The corresponding markdown-content secret (`PROJECT_BRIEF_MD` or `COMPANY_LIST_MD`) is either missing or empty. Re-do Step 3b — `pbcopy < PROJECT_BRIEF.md` (or `< COMPANY_LIST.md`), open the secret on GitHub, click **Update**, paste, **Update secret**.
+
+**The cron picked stale company / brief content (e.g., scored against an old tier list):**
+You edited `PROJECT_BRIEF.md` or `COMPANY_LIST.md` locally but forgot to re-upload the matching secret. Do the `pbcopy` + Update flow in Step 3b. Confirm with a manual `workflow_dispatch` trigger — the next run will use the fresh content.
 
 **The run failed at "Send email digest" with HTTP 403:**
 You're hitting the same Resend gotcha as Phase D setup — `DIGEST_RECIPIENT_EMAIL` doesn't match the email you signed up to Resend with. See `docs/PHASE_D_SETUP.md` Step 4 troubleshooting for the three fixes.

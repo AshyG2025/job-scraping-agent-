@@ -6,7 +6,7 @@
 >
 > **How you maintain it:** When Claude suggests a useful new pattern during a session, Claude will add it here automatically and tell you it did. You can also add or edit entries freely.
 >
-> **Last updated:** 2026-05-12 (Phase E — GitHub Actions cron shipped. New entries in "Git & GitHub" section: manual cron trigger via Actions tab, viewing past runs, downloading artifacts, disabling the cron. Earlier 2026-05-12 — Phase D shipped: new `python scripts/send_digest.py` (with `--dry-run`) + `python scripts/check_resend.py` diagnostic. Tue/Thu one-liner now chains `&& python scripts/send_digest.py`. Earlier 2026-05-11 — Added `/analyze-jd` slash command — recruiter-grade deep JD analysis, distinct from the lightweight `score_jobs.py` matcher.)
+> **Last updated:** 2026-05-14 (Phase E hotfix — added "Re-upload `PROJECT_BRIEF_MD` / `COMPANY_LIST_MD` after editing local file" entry to Git & GitHub section. The Phase E cron crashed on its first manual trigger because `PROJECT_BRIEF.md` and `COMPANY_LIST.md` are gitignored per Rule 7 — fix is 2 new secrets that hold the file *contents*, re-uploaded whenever the local file changes. Earlier 2026-05-12 — Phase E — GitHub Actions cron shipped. New entries in "Git & GitHub" section: manual cron trigger via Actions tab, viewing past runs, downloading artifacts, disabling the cron. Earlier 2026-05-12 — Phase D shipped: new `python scripts/send_digest.py` (with `--dry-run`) + `python scripts/check_resend.py` diagnostic. Tue/Thu one-liner now chains `&& python scripts/send_digest.py`. Earlier 2026-05-11 — Added `/analyze-jd` slash command — recruiter-grade deep JD analysis, distinct from the lightweight `score_jobs.py` matcher.)
 
 ---
 
@@ -68,6 +68,8 @@
 | See past cron runs (success/failure history) | Open https://github.com/AshyG2025/job-scraping-agent-/actions | Each run shows duration, which step failed, and links to live logs |
 | Download a past run's `digest.md` + `scored_results.json` | Actions → click a run → Artifacts section at the bottom → `pipeline-output-<run-id>` | 14-day retention. Useful for "why did Tuesday's run produce 0 strong matches?" post-mortems |
 | Temporarily disable the cron (still allows manual triggers) | Edit `.github/workflows/scrape.yml`, comment out the `- cron: "0 17 * * 2,4"` line, commit, push | Re-enable by uncommenting; manual `workflow_dispatch` trigger still works while disabled |
+| **Re-upload `PROJECT_BRIEF.md` to GitHub after editing it locally** | 1) `pbcopy < PROJECT_BRIEF.md` 2) Open https://github.com/AshyG2025/job-scraping-agent-/settings/secrets/actions → click `PROJECT_BRIEF_MD` → **Update** → paste → **Update secret** | The file is gitignored (CLAUDE.md Rule 7), so the cron reads its contents from this secret. If you forget, the next cron run scores against the stale version silently. Same flow for `COMPANY_LIST_MD`. |
+| **Re-upload `COMPANY_LIST.md` to GitHub after editing it locally** | 1) `pbcopy < COMPANY_LIST.md` 2) Open https://github.com/AshyG2025/job-scraping-agent-/settings/secrets/actions → click `COMPANY_LIST_MD` → **Update** → paste → **Update secret** | Same chore as above. A reasonable habit: re-upload the secret in the same session you edit the local file. |
 
 ---
 

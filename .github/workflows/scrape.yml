@@ -18,8 +18,11 @@
 # The pipeline scripts are designed to fail loud on real errors (bad JSON,
 # Resend HTTP error, etc.); transient ATS failures are logged but don't crash.
 #
-# All 7 required secrets must be set under Settings → Secrets and variables →
+# All 9 required secrets must be set under Settings → Secrets and variables →
 # Actions before this workflow can run end-to-end. See docs/PHASE_E_SETUP.md.
+# (The 2 markdown-content secrets — PROJECT_BRIEF_MD + COMPANY_LIST_MD — must be
+# re-uploaded whenever the local files change; they're gitignored per CLAUDE.md
+# Rule 7 so they can't be checked in.)
 
 name: Job scraper — Tue/Thu morning
 
@@ -84,6 +87,22 @@ jobs:
           printf '%s' "$GOOGLE_SHEETS_KEY_JSON" > _local/google_sheets_key.json
         env:
           GOOGLE_SHEETS_KEY_JSON: ${{ secrets.GOOGLE_SHEETS_KEY_JSON }}
+
+      # Write the two local-only context files that score_jobs.py loads into the
+      # system prompt — PROJECT_BRIEF.md (the strategic working copy) and
+      # COMPANY_LIST.md (named target companies). Both are gitignored per
+      # CLAUDE.md Rule 7 so they don't exist on the runner's fresh checkout.
+      # When either file changes locally, the matching secret must be re-uploaded
+      # to GitHub or the cron will keep using the stale version.
+      # printf '%s' is shell-safe: '%s' is the format string (literal), and the
+      # value is passed via the env: block (no shell interpolation of $ or `).
+      - name: Write private context files from secrets
+        run: |
+          printf '%s' "$PROJECT_BRIEF_MD" > PROJECT_BRIEF.md
+          printf '%s' "$COMPANY_LIST_MD" > COMPANY_LIST.md
+        env:
+          PROJECT_BRIEF_MD: ${{ secrets.PROJECT_BRIEF_MD }}
+          COMPANY_LIST_MD: ${{ secrets.COMPANY_LIST_MD }}
 
       # All scripts use python-dotenv's load_dotenv() but also fall back to
       # os.environ when .env isn't present. We pass secrets via env: blocks
