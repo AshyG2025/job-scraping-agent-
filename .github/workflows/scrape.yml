@@ -46,7 +46,13 @@ permissions:
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
-    timeout-minutes: 30  # Apify LinkedIn step alone can take ~5-8 min; full pipeline ~15 min
+    timeout-minutes: 90  # Steady-state runs finish in ~15 min (Apify 5-8 min + score 8-12 net-new roles).
+                         # Bumped from 30 → 90 on 2026-05-14 after the cold-start run hit the 30-min ceiling
+                         # at exactly 30m15s: with no scraped_seen.json cache yet, the deduper saw 78 roles
+                         # as new and score_jobs.py was killed mid-loop. 90 min gives ample headroom for
+                         # the cold start (~10 min scrape + ~25 min score 78 roles + buffer) and for future
+                         # transient slowness (Apify hiccups, Anthropic rate-limit retries). GitHub Actions
+                         # only bills actual minutes used, so a generous ceiling costs nothing.
 
     steps:
       - name: Checkout repo
