@@ -77,3 +77,11 @@ Ayesha Resume/Cover Letters/
 # Parallel manual workflow — not part of the job-scraping agent.
 # Lives in the project root for convenience only; never push.
 London Headhunters/
+
+# Geo-specific personal work folders — keep local only.
+# Contain confidential Amazon-internal PRDs, role-specific JDs/prep kits, and
+# interview prep session state docs (e.g., WOLT_INTERVIEW_PREP_STATE.md). Same
+# reasoning as London Headhunters/ — never push. Previously safe via untracked
+# status; now explicitly gitignored to protect against accidental git add -A.
+London Work folder/
+US Work folder/
