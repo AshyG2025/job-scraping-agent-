@@ -78,6 +78,14 @@ Ayesha Resume/Cover Letters/
 # Lives in the project root for convenience only; never push.
 London Headhunters/
 
+# White-label productization side initiative — treated as its own nested git repo.
+# Extension of the V1 Job Scraping Agent, exploring whether the framework is
+# replicable as a white-label template/product for other senior PMs. Has its
+# own .git/ inside the folder; gitignored from the parent so the two repos
+# don't conflict. If Phase 0 validates, this nested repo can be pushed to its
+# own GitHub remote with clean history. See White Label Product/README.md.
+White Label Product/
+
 # Geo-specific personal work folders — keep local only.
 # Contain confidential Amazon-internal PRDs, role-specific JDs/prep kits, and
 # interview prep session state docs (e.g., WOLT_INTERVIEW_PREP_STATE.md). Same
