@@ -58,13 +58,22 @@ TITLE_DROP_PATTERNS = [
 ]
 
 # Geo KEEP — at least one of these regex patterns must match the location.
+#
+# Temporarily restricted to London-only on 2026-05-19 as a cost guardrail
+# (each Anthropic API scoring call costs ~$0.15; a busy run of 100 US+UK roles
+# = ~$15). To restore full Seattle / SF / London scope, uncomment the US
+# patterns below AND re-enable the Seattle + SF Bay LinkedIn search entries
+# in scripts/run_scrapers.py. Keep HARD_FILTERS.md Section 3 in sync.
 GEO_KEEP_PATTERNS = [
-    r"\bSeattle\b", r"\bBellevue\b", r"\bRedmond\b",
-    r"\bSan\s+Francisco\b", r"\bSF\b", r"\bBay\s+Area\b",
-    r"\bPalo\s+Alto\b", r"\bMountain\s+View\b", r"\bMenlo\s+Park\b",
-    r"\bSunnyvale\b", r"\bSan\s+Jose\b", r"\bOakland\b", r"\bBerkeley\b",
+    # --- US (paused 2026-05-19 — uncomment to re-enable) ---
+    # r"\bSeattle\b", r"\bBellevue\b", r"\bRedmond\b",
+    # r"\bSan\s+Francisco\b", r"\bSF\b", r"\bBay\s+Area\b",
+    # r"\bPalo\s+Alto\b", r"\bMountain\s+View\b", r"\bMenlo\s+Park\b",
+    # r"\bSunnyvale\b", r"\bSan\s+Jose\b", r"\bOakland\b", r"\bBerkeley\b",
+    # r"Remote.*\bUS\b",
+    # --- UK (active) ---
     r"\bLondon\b", r"\bGreater\s+London\b",
-    r"Remote.*\bUS\b", r"Remote.*\bUK\b",
+    r"Remote.*\bUK\b",
 ]
 
 # Posting freshness — calendar days since first publication.

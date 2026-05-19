@@ -299,7 +299,30 @@ def main() -> None:
             verdict = parsed.get("verdict", "?")
             cache_hit = usage["cache_read_input_tokens"]
             print(f"   → score: {score} ({verdict})    [cache_read: {cache_hit:,} tokens]")
+        except anthropic.APIError as e:
+            # Fail loud on any Anthropic API error (insufficient credit, bad key,
+            # rate limit after SDK retries, 5xx). Every subsequent call would hit
+            # the same error, so continuing burns Apify $ on a doomed pipeline
+            # AND leaves the GitHub Actions workflow showing green when it
+            # shouldn't. Persist whatever partial results we have so the run
+            # artifact still has debug context, then exit non-zero.
+            OUTPUT_DIR.mkdir(exist_ok=True)
+            if results:
+                RESULTS_JSON.write_text(json.dumps(results, indent=2, default=str))
+                DIGEST_MD.write_text(build_digest(results))
+            sys.exit(
+                f"\n❌ Anthropic API error on entry [{i}/{len(entries)}] "
+                f"({entry['company']} — {entry['title']}): {e}\n"
+                f"\nStopped the run to avoid burning more Apify $ on a doomed "
+                f"pipeline. Common fixes:\n"
+                f"  • Insufficient credit → top up at https://console.anthropic.com/settings/billing\n"
+                f"  • Bad API key → check ANTHROPIC_API_KEY (.env locally, secret in GitHub Actions)\n"
+                f"  • Persistent rate limit → wait a few minutes and re-trigger\n"
+                f"  • Anthropic outage → check https://status.anthropic.com/\n"
+            )
         except Exception as e:
+            # Non-API errors (JSON parse, unexpected response shape) — log and
+            # continue with the next role.
             print(f"   ✗ FAILED: {e}")
             results.append({"_error": str(e), "_entry": entry})
 

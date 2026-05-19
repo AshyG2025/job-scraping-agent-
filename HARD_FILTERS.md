@@ -2,7 +2,7 @@
 
 > **How this file is used:** These rules run **before** any LLM scoring. A job posting that fails any of these filters is dropped from the pipeline entirely. The point is to save Claude API tokens (and your eyeballs) on roles that are obvious no-gos.
 >
-> **Last updated:** 2026-04-27
+> **Last updated:** 2026-05-19 (Section 3 — temporary London-only geo restriction added as a cost guardrail; US scope paused. See Section 3 banner.) Earlier 2026-04-27.
 
 ---
 
@@ -46,14 +46,18 @@ Drop the role if the JD body contains explicit people-management language, even 
 
 ## 3. Geography filter
 
+> ⚠️ **TEMPORARY RESTRICTION (added 2026-05-19): London-only.** US scope (Seattle / SF Bay / Remote — US) is paused as a cost guardrail after a busy run on 2026-05-19 surfaced 42 net-new roles and ran into Anthropic API credit exhaustion mid-scoring. Each scoring call costs ~$0.15, so a 100-role run = ~$15. Restricting to London cuts typical run cost to ~$1–2.
+>
+> **To restore full scope:** uncomment the US patterns in `scripts/scrapers/common.py` (lines 60-77) AND re-enable the Seattle + SF Bay LinkedIn search entries in `scripts/run_scrapers.py` (the two commented-out entries near line 95). Then revert this banner and the KEEP list below.
+
 **KEEP** if location contains any of (case-insensitive):
-- `Seattle`, `Bellevue`, `Redmond`
-- `San Francisco`, `SF`, `Bay Area`, `Palo Alto`, `Mountain View`, `Menlo Park`, `Sunnyvale`, `San Jose`, `Oakland`, `Berkeley`
-- `London`, `Greater London`, `UK` *(only when paired with London — bare `UK` shouldn't match Manchester/Edinburgh roles)*
-- `Remote — US` *(if the company is on the H1B-OK list; flag for manual review otherwise)*
+- `London`, `Greater London`
 - `Remote — UK` *(unconditional)*
 
-**DROP** all other geos:
+**DROP** all other geos, including the previously-allowed US scope:
+- ~~`Seattle`, `Bellevue`, `Redmond`~~ *(paused 2026-05-19)*
+- ~~`San Francisco`, `SF`, `Bay Area`, `Palo Alto`, `Mountain View`, `Menlo Park`, `Sunnyvale`, `San Jose`, `Oakland`, `Berkeley`~~ *(paused 2026-05-19)*
+- ~~`Remote — US`~~ *(paused 2026-05-19)*
 - New York / NYC, Boston, Austin, Chicago, Los Angeles, Denver, Miami, etc.
 - Manchester, Edinburgh, Dublin, Berlin, Paris, Amsterdam, Singapore, Sydney, etc.
 - Anywhere in India, despite past work history there

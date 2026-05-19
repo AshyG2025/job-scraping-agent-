@@ -92,18 +92,23 @@ SOURCES = [
     # (logged-in URLs return 0 results). max_results capped per-source so total
     # cost stays at ~$0.20/run ($1/1000 results × 200 results = ~$1.60/mo at 2x/wk).
     # Companies aren't tied to COMPANY_LIST.md tiers — the Sheet shows tier="discovery".
-    {
-        "company": "LinkedIn — Seattle",
-        "ats": "linkedin_apify",
-        "search_url": "https://www.linkedin.com/jobs/search/?keywords=Product%20Manager&location=Seattle%2C%20Washington%2C%20United%20States&f_TPR=r2592000&f_E=4&f_JT=F&sortBy=DD",
-        "max_results": 67,
-    },
-    {
-        "company": "LinkedIn — SF Bay",
-        "ats": "linkedin_apify",
-        "search_url": "https://www.linkedin.com/jobs/search/?keywords=Product%20Manager&location=San%20Francisco%20Bay%20Area&f_TPR=r2592000&f_E=4&f_JT=F&sortBy=DD",
-        "max_results": 67,
-    },
+    #
+    # Seattle + SF Bay paused 2026-05-19 alongside the London-only geo guardrail
+    # in scripts/scrapers/common.py — leaving them active would burn ~$0.14/run
+    # of Apify time scraping roles that all get dropped by the geo filter
+    # downstream. To re-enable, uncomment the two entries below.
+    # {
+    #     "company": "LinkedIn — Seattle",
+    #     "ats": "linkedin_apify",
+    #     "search_url": "https://www.linkedin.com/jobs/search/?keywords=Product%20Manager&location=Seattle%2C%20Washington%2C%20United%20States&f_TPR=r2592000&f_E=4&f_JT=F&sortBy=DD",
+    #     "max_results": 67,
+    # },
+    # {
+    #     "company": "LinkedIn — SF Bay",
+    #     "ats": "linkedin_apify",
+    #     "search_url": "https://www.linkedin.com/jobs/search/?keywords=Product%20Manager&location=San%20Francisco%20Bay%20Area&f_TPR=r2592000&f_E=4&f_JT=F&sortBy=DD",
+    #     "max_results": 67,
+    # },
     {
         "company": "LinkedIn — London",
         "ats": "linkedin_apify",
