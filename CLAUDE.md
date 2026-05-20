@@ -49,9 +49,16 @@ When recommending resume tweaks, cover-letter angles, or how to position my expe
 
 ---
 
-## Rule 4: Memory updates.
+## Rule 4: Memory updates — both triggers, verified.
 
-When I make a decision, change a constraint, or share new context, update the relevant memory file in `~/.claude/projects/.../memory/`. Don't let memory drift from current reality.
+Update the relevant memory file in `~/.claude/projects/.../memory/` when EITHER of these happens:
+
+- **I share new context** — a decision, a changed constraint, or new domain info.
+- **You complete work and receive feedback** — capture what you learned as a rule or hypothesis update (e.g., a corrected scoring convention, a calibration anchor that shifted, a drafting voice rule, a new edge case).
+
+**Always verify the update before writing it.** Re-read the existing memory file first; confirm the change isn't a misread of the feedback; confirm it doesn't conflict with another memory. If unsure, ask me before saving.
+
+Don't let memory drift from current reality.
 
 ---
 
@@ -129,6 +136,32 @@ The local files are read by the scoring runner (`scripts/score_jobs.py`) and ass
 - Editing the Referral Network list, comp section, or other sections that don't appear in the public copy
 
 After updating the public copy, bump its `**Last updated:**` line at the top.
+
+---
+
+## Rule 8: Review existing rules and hypotheses before starting a task.
+
+Before touching a domain in this project, scan what's already been learned about it. Sources to check, in order:
+
+1. **`MEMORY.md` index** (auto-loaded) → identify any `feedback_*` or `project_*` memories tagged to the domain you're about to work in (e.g., recruiter outreach, scoring calibration, geo filters, interview prep).
+2. **Read the relevant memory files in full** — descriptions in the index aren't enough; the body usually contains the *why* and the *how to apply* that change the right answer.
+3. **Domain-specific hypotheses** — `SCORING_PROMPT.md` Tunable Parameters + Iteration log; `docs/EVAL_SET.md` calibration anchors; `PROJECT_BRIEF.md` flagship metrics; recent `docs/qc-reports/` if scoring-related.
+4. **State the rule or hypothesis you're applying** in your first response so I can correct misreads before you act on them.
+
+**Why:** This project has accumulated ~25 memory files with feedback-derived rules (drafting voice, geo guardrails, calibration conventions, etc.). Acting without checking them re-introduces problems we already solved. Even one missed `feedback_*` memory can produce work I have to redo.
+
+---
+
+## Rule 9: Apply confirmed rules by default.
+
+Once a rule has been captured (in a `feedback_*` memory, in `SCORING_PROMPT.md`, in `CLAUDE.md`, in `PROJECT_BRIEF.md`, etc.) and not subsequently overridden, **apply it by default to relevant work without re-asking.**
+
+- If a rule applies cleanly → apply it silently (no need to announce "per memory X…").
+- If a rule *might* apply but the case is borderline → state the rule and ask before applying.
+- If two captured rules conflict → flag the conflict and ask which wins; don't pick silently.
+- A rule isn't a suggestion. If I want it overridden for a specific case, I'll say so.
+
+**Why:** Confirmed rules exist because the wrong default cost me time before. Re-asking on every application defeats the purpose of capturing them.
 
 ---
 
